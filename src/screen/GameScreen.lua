@@ -61,7 +61,7 @@ function GameScreen:update(dt)
 			self.player:getHit(v.dmg)
 			v:onEnd()
 			table.insert(mustRemove, i)
-		elseif v.dir.x > 0 and v:collide(self.boss.sprite) then
+		elseif v.dir.x > 0 and v:collide(self.boss.areaAnim) then
 			self.boss:getHit(v.dmg)
 			self.player:changeAnim8("yeah")
 			v:onEnd()

@@ -1,0 +1,133 @@
+return {
+-- Table: {1}
+{
+   {2},
+   {3},
+   {4},
+   {5},
+},
+-- Table: {2}
+{
+   {6},
+   {7},
+   {8},
+},
+-- Table: {3}
+{
+   {9},
+   {10},
+   {11},
+},
+-- Table: {4}
+{
+   {12},
+   {13},
+   {14},
+},
+-- Table: {5}
+{
+   {15},
+   {16},
+   {17},
+},
+-- Table: {6}
+{
+   ["ease"]="backout",
+   ["translation"]={18},
+},
+-- Table: {7}
+{
+   ["ease"]="backout",
+   ["translation"]={19},
+},
+-- Table: {8}
+{
+   ["ease"]="backout",
+   ["translation"]={20},
+},
+-- Table: {9}
+{
+   ["ease"]="linear",
+   ["translation"]={21},
+},
+-- Table: {10}
+{
+   ["ease"]="linear",
+   ["translation"]={22},
+},
+-- Table: {11}
+{
+   ["ease"]="linear",
+   ["translation"]={23},
+},
+-- Table: {12}
+{
+   ["ease"]="linear",
+},
+-- Table: {13}
+{
+   ["rotation"]=0.8259368,
+   ["ease"]="linear",
+},
+-- Table: {14}
+{
+   ["rotation"]=1.434504,
+   ["ease"]="linear",
+},
+-- Table: {15}
+{
+   ["ease"]="linear",
+},
+-- Table: {16}
+{
+   ["rotation"]=-0.8259368,
+   ["translation"]={24},
+   ["ease"]="linear",
+},
+-- Table: {17}
+{
+   ["rotation"]=-1.434504,
+   ["translation"]={25},
+   ["ease"]="linear",
+},
+-- Table: {18}
+{
+   ["y"]=2.0,
+   ["x"]=13.0,
+},
+-- Table: {19}
+{
+   ["y"]=-2.0,
+   ["x"]=-21.0,
+},
+-- Table: {20}
+{
+   ["y"]=1.0,
+   ["x"]=-21.0,
+},
+-- Table: {21}
+{
+   ["y"]=-2.0,
+   ["x"]=-13.0,
+},
+-- Table: {22}
+{
+   ["y"]=2.0,
+   ["x"]=9.0,
+},
+-- Table: {23}
+{
+   ["y"]=-1.0,
+   ["x"]=9.0,
+},
+-- Table: {24}
+{
+   ["y"]=1.907349e-06,
+   ["x"]=12.0,
+},
+-- Table: {25}
+{
+   ["y"]=7.629395e-06,
+   ["x"]=12.0,
+},
+}

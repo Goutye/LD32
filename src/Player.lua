@@ -133,12 +133,12 @@ function Player:getHit(dmg)
 		self:changeAnim8("yeah")
 		return
 	end
-	self.life = self.life - dmg
-	if self.life < 0 then
-		self.life = 0
+
+	if self.life - dmg < 0 then
 		self.isDead = true
+		dmg = self.life
 	end
-	self.life = self.life + dmg
+
 	EasyLD.flux.to(self, 0.8, {life = -dmg}, "relative")
 end
 

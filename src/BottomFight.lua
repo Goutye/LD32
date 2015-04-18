@@ -36,7 +36,7 @@ end
 
 function BottomFight:update(dt)
 	if self.boss.isDead then
-		self.timer = EasyLD.timer.after(0.7, self.onEnd, self)
+		self.timer = EasyLD.timer.after(0.4, self.onEnd, self)
 	elseif self.player.isDead then
 		self.boss:reset()
 		self.player:restore()

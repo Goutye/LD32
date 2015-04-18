@@ -54,6 +54,7 @@ end
 
 function AreaAnimation:init(x, y)
 	self.shouldStop = false
+	self.frameTween = {}
 	self.current = 1
 	local x, y = x or self.obj.x, y or self.obj.y
 	self.obj:moveTo(0,0)

@@ -82,7 +82,7 @@ end
 function Point:draw()
 	if self.img == nil and self.display then
 		EasyLD.graphics:point(self, self.c)
-	else
+	elseif self.img ~= nil then
 		if self.imgType == "center" then
 			local zW = EasyLD.vector:new(1, 0)
 			local zH = EasyLD.vector:new(0, 1)

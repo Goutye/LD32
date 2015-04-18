@@ -3,7 +3,7 @@ local class = require 'middleclass'
 local Projectile = class('Projectile')
 
 function Projectile:initialize(x, y, dx, dmg, perc)
-	local c = EasyLD.box:new(0,0, 10, 10, EasyLD.color:new(255,255,255))
+	local c = EasyLD.circle:new(5,5, 7, EasyLD.color:new(255,255,255))
 	self.sprite = EasyLD.area:new(c)
 	self.sprite:attach(EasyLD.point:new(5, 5))
 	self.sprite:moveTo(x, y)
@@ -11,7 +11,7 @@ function Projectile:initialize(x, y, dx, dmg, perc)
 		self.img = EasyLD.spriteAnimation(self.sprite.forms[2], "assets/tilesets/missile.png", 3, 0.3, 32, 32, 0, -1, "center")
 		self.img:play()
 	else
-		self.sprite.forms[2]:attachImg(EasyLD.image:new("assets/tilesets/star.png"), "center")
+		self.sprite.forms[1]:attachImg(EasyLD.image:new("assets/tilesets/star.png"), "center")
 		self.timer = EasyLD.timer.every(0.01, self.sprite.rotate, self.sprite, math.pi/64)
 	end
 
