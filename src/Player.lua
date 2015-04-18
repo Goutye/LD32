@@ -129,6 +129,7 @@ function Player:def()
 end
 
 function Player:getHit(dmg)
+	EasyLD.camera:shake({x = 5}, 0.5)
 	if self.isDef then
 		self:changeAnim8("yeah")
 		return

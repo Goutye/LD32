@@ -23,9 +23,27 @@ function GameScreen:initialize()
 	self.fight = false
 	self.level = 1
 	self.topPath:changeLevel(1, self.fight, self.bottomPath)
+
+	self.lastDt = 1
+	self.slower = false
 end
 
 function GameScreen:preCalcul(dt)
+	if self.proj ~= nil then
+		if self.proj.dmg > self.boss.life and not self.boss.isDead then
+			self.slower = true
+			dt = dt * math.min(1/10 + (self.boss.areaAnim.x - self.proj.sprite.x)/(WINDOW_WIDTH/4)*9/10, 1)
+		elseif self.boss.isDead then
+			dt = self.lastDt + 0.0001
+
+			if self.slower then
+				EasyLD.camera:shake({x = 5, y = 5}, 2)
+				self.slower = false
+				self.timer = EasyLD.timer.after(0.5, self.backToNormal, self)
+			end
+		end
+	end
+	self.lastDt = dt
 	return dt
 end
 
@@ -67,6 +85,10 @@ function GameScreen:update(dt)
 			v:onEnd()
 			table.insert(mustRemove, i)
 		end
+
+		if v.dir.x > 0 then
+			self.proj = v
+		end
 	end
 
 	for i,v in ipairs(mustRemove) do
@@ -89,6 +111,11 @@ function GameScreen:draw()
 end
 
 function GameScreen:onQuit()
+end
+
+function GameScreen:backToNormal()
+	self.proj = nil
+	print("ok")
 end
 
 return GameScreen
