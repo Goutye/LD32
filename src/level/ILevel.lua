@@ -73,10 +73,10 @@ end
 
 function ILevel:goBack()
 	self.levelBack = true
-	EasyLD.flux.to(self.area, self.timeEase/2, {x = self.xStart}):ease(self.easeType)
-	EasyLD.flux.to(self, self.timeEase/2, {prevPercent = 0}):ease(self.easeType)
+	EasyLD.flux.to(self.area, self.timeEase/1.33, {x = self.xStart}):ease(self.easeType)
+	EasyLD.flux.to(self, self.timeEase/1.33, {prevPercent = 0}):ease(self.easeType)
 	if self.bonusArea ~= nil then
-		EasyLD.flux.to(self.bonusArea, self.timeEase/2, {x = self.xStart}):ease(self.easeType)
+		EasyLD.flux.to(self.bonusArea, self.timeEase/1.33, {x = self.xStart}):ease(self.easeType)
 	end
 	self.isStart = false
 	self.currentTime = 0
@@ -89,7 +89,7 @@ function ILevel:goBack()
 		self.bonus[#self.bonus]:hide()
 	end
 	self.isEnd = false
-	self.timer = EasyLD.timer.after(self.timeEase/2, self.start, self)
+	self.timer = EasyLD.timer.after(self.timeEase/1.33, self.start, self)
 	for i, v in ipairs(self.bonus) do
 		v:reset()
 	end

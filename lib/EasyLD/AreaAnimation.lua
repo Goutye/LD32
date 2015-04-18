@@ -23,13 +23,15 @@ function AreaAnimation:initialize(pos, area, timeFrames, frames, looping, callba
 	self.obj = area
 	self.areaList = { exploreArea(area) }
 	--initPos
+	local f = {}
 	if type(frames) == "string" then
-		local f = table.load(frames .. "init")
+		f = table.load(frames .. "init")
 		for i,v in ipairs(f) do
 			self.areaList[i]:rotateTo(v.angle)
 			self.areaList[i]:moveTo(v.x, v.y)
 		end
 	end
+	self.initFrames = f
 	--MoveTo
 	area:moveTo(pos.x, pos.y)
 
@@ -48,6 +50,19 @@ function AreaAnimation:initialize(pos, area, timeFrames, frames, looping, callba
 	self.callback = callback
 	self.args = args
 	self.shouldStop = false
+end
+
+function AreaAnimation:init(x, y)
+	self.shouldStop = false
+	self.current = 1
+	local x, y = x or self.obj.x, y or self.obj.y
+	self.obj:moveTo(0,0)
+	local f = self.initFrames
+	for i,v in ipairs(f) do
+		self.areaList[i]:rotateTo(v.angle)
+		self.areaList[i]:moveTo(v.x, v.y)
+	end
+	self.obj:moveTo(x,y)
 end
 
 function AreaAnimation:pause()

@@ -29,7 +29,7 @@ function SpriteAnimation.static.getTimeFromPercent(time, table)
 	return t
 end
 
-function SpriteAnimation:initialize(obj, name, nbImg, time, w, h, idStart, nbCycle)
+function SpriteAnimation:initialize(obj, name, nbImg, time, w, h, idStart, nbCycle, imgType)
 	self.obj = obj
 	self.src = name
 	self.nbImg = nbImg
@@ -41,7 +41,7 @@ function SpriteAnimation:initialize(obj, name, nbImg, time, w, h, idStart, nbCyc
 	self.nbSpriteW = math.floor(self.img.w/self.w)
 	self.time = time
 	self.nbCycle = nbCycle or 1
-	self:play()
+	self.imgType = imgType
 end
 
 function SpriteAnimation:pause()
@@ -85,6 +85,7 @@ end
 
 function SpriteAnimation:play()
 	self.obj.img = self
+	self.obj.imgType = self.imgType
 	if type(self.time) == "number" then
 		self:playNumber()
 	else

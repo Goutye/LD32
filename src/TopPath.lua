@@ -15,7 +15,6 @@ function TopPath:initialize(player, bottomPath)
 
 	self.percentMin = 50
 
-	self.timeOut = 0
 	self.numLevel = 1
 	self.currentTime = 0
 
@@ -45,8 +44,10 @@ end
 function TopPath:changeLevel(i, fight, bottom)
 	self.listLevel = {}
 	if fight then
+		self.percentMin = 50
 		self.listLevel = self.listLevelFight
 	else
+		self.percentMin = 50
 		self.listLevel = self.listLevelPath
 	end
 	self.numLevel = i

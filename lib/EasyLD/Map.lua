@@ -5,6 +5,7 @@ local Map = class('Map')
 function Map:initialize(src, tileset)
 	self.src = src
 	self.tileset = tileset
+	self:load()
 end
 
 function Map:load()

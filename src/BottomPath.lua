@@ -3,7 +3,7 @@ local class = require 'middleclass'
 local BottomPath = class('BottomPath')
 
 local function getPositionSegment(p1, p2, percent)
-	local step = WINDOW_WIDTH / 3
+	local step = WINDOW_WIDTH * 3 / 4 / 2
 	local a = (p2.y - p1.y) / (p2.x - p1.x)
 	local x = percent * step
 	return p1.x + x, p1.y + a * x
@@ -18,7 +18,7 @@ function BottomPath:initialize(nbSteps, player)
 	self.background = EasyLD.box:new(0, self.h * 3, WINDOW_WIDTH, self.h, EasyLD.color:new(0,0,0), "fill")
 
 	self.current = 1 --step
-	self.step = WINDOW_WIDTH / 3
+	self.step = WINDOW_WIDTH * 3 / 4 / 2
 
 	self.previous = nil
 	self.player = player
@@ -34,22 +34,32 @@ function BottomPath:initialize(nbSteps, player)
 	self.isEnd = false
 
 	self:generate()
+
+	self.tileset = EasyLD.tileset:new("assets/tilesets/tileset.png", 32, 32)
+	self.map = EasyLD.map:new("assets/maps/mapoutside.map", self.tileset)
+	self.mapDec = EasyLD.point:new(0,0)
+	self.mapBegin = EasyLD.point:new(0,0)
+	self.tower = EasyLD.image:new("assets/tilesets/tower.png")
+	self.boxTower = EasyLD.box:new(WINDOW_WIDTH - 128, self.h*3, 128, self.h)
+	self.boxTower:attachImg(self.tower)
 end
 
 function BottomPath:generate()
+	local img = EasyLD.image:new("assets/tilesets/circle.png")
 	local yPos = self.h * 3 + self.h / 2
 	local xPos = 30
-	local p1, p2 = EasyLD.point:new(xPos, yPos), EasyLD.point:new(WINDOW_WIDTH/3 + xPos, yPos)
+	local p1, p2 = EasyLD.point:new(xPos, yPos), EasyLD.point:new(self.step + xPos, yPos)
 	table.insert(self.steps, {p1})
 	table.insert(self.steps, {p2})
 	self.area = EasyLD.area:new(EasyLD.segment:new(p1, p2))
 	self.previous = p1
 
 	local circ = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
+	circ:attachImg(img, "center")
 	self.area:attach(circ)
 	table.insert(self.stepsCirc, {circ})
 
-	local xPoint = WINDOW_WIDTH * 2 / 3 + xPos
+	local xPoint = self.step * 2 + xPos
 	local yPoint = (self.h - 10) / 4
 
 	for i = 2, self.nbSteps do
@@ -61,6 +71,7 @@ function BottomPath:generate()
 			p1 = EasyLD.point:new(xPoint, r1 * yPoint  + yPos)
 			p2 = EasyLD.point:new(xPoint, r2 * yPoint  + yPos)
 			circ = EasyLD.circle:new(p.x, p.y, 5, EasyLD.color:new(100,0,0))
+			circ:attachImg(img, "center")
 			table.insert(self.steps, {p1, p2})
 			table.insert(self.stepsCirc, {circ})
 			self.area:attach(EasyLD.segment:new(p, p1))
@@ -71,6 +82,8 @@ function BottomPath:generate()
 			p2 = EasyLD.point:new(xPoint, math.random(-1,1) * yPoint  + yPos)
 			circ1 = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
 			circ2 = EasyLD.circle:new(p.x, p.y, 5, EasyLD.color:new(100,0,0))
+			circ1:attachImg(img, "center")
+			circ2:attachImg(img, "center")
 			table.insert(self.steps, {p2})
 			table.insert(self.stepsCirc, {circ1, circ2})
 			self.area:attach(EasyLD.segment:new(p1, p2))
@@ -81,6 +94,7 @@ function BottomPath:generate()
 			p1 = p2
 			p2 = EasyLD.point:new(xPoint, math.random(-1,1) * yPoint  + yPos)
 			circ = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
+			circ:attachImg(img, "center")
 			table.insert(self.steps, {p2})
 			table.insert(self.stepsCirc, {circ})
 			self.area:attach(EasyLD.segment:new(p1, p2))
@@ -89,6 +103,7 @@ function BottomPath:generate()
 	end
 
 	circ = EasyLD.circle:new(p2.x, p2.y, 5, EasyLD.color:new(100,0,0))
+	circ:attachImg(img, "center")
 	self.area:attach(circ)
 	table.insert(self.stepsCirc, {circ})
 end
@@ -106,6 +121,11 @@ function BottomPath:update(dt, progress)
 		end
 	else
 		self.isEnd = true
+	end
+
+	if self.mapDec.x <= -32 then
+		self.mapDec.x = self.mapDec.x + 32
+		self.mapBegin.x = self.mapBegin.x + 1
 	end
 end
 
@@ -133,6 +153,10 @@ function BottomPath:goNext(id)
 			end
 		end
 		EasyLD.flux.to(self.player.form, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
+		EasyLD.flux.to(self.mapDec, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
+		if self.current == self.nbSteps - 1 then
+			EasyLD.flux.to(self.boxTower, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
+		end
 		self.previous = self.steps[self.current + 1][self.idPrevious]
 	end
 	self.current = self.current + 1
@@ -144,7 +168,9 @@ end
 
 function BottomPath:draw()
 	self.background:draw()
+	self.map:draw(math.floor(self.mapDec.x), self.mapDec.y + self.h * 3, 30, 5, self.mapBegin.x, self.mapBegin.y)
 	self.area:draw()
+	self.boxTower:draw()
 	self.player.form:draw()
 end
 

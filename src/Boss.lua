@@ -67,6 +67,8 @@ function Boss:getHit(dmg)
 		self.life = 0
 		self.isDead = true
 	end
+	self.life = self.life + dmg
+	EasyLD.flux.to(self, 0.8, {life = -dmg}, "relative")
 end
 
 return Boss
