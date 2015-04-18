@@ -16,8 +16,10 @@ end
 function Def:get(level)
 	if not self.isGet then
 		level:def()
-		self.isGet = true
-		self.area.display = false
+		for i = 1, #level.bonus do
+			level.bonus[i]:hide()
+		end
+		self:hide()
 	end
 end
 

@@ -25,7 +25,6 @@ function Player:update(dt)
 end
 
 function Player:draw()
-	self.form:draw()
 	self.area:draw()
 end
 
@@ -36,7 +35,7 @@ function Player:drawUI()
 	b.w = b.w * self.life/self.maxLife
 	b.c = EasyLD.color:new(200,40,40)
 	b:draw()
-	font:print(self.life .. "/" .. self.maxLife, 20, self.boxLife, "center", "center", EasyLD.color:new(255,255,255))
+	font:print(math.ceil(self.life) .. "/" .. self.maxLife, 20, self.boxLife, "center", "center", EasyLD.color:new(255,255,255))
 end
 
 function Player:moveTo(x, y)

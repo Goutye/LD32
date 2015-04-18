@@ -31,6 +31,8 @@ function BottomPath:initialize(nbSteps, player)
 	self.idNext = 1
 	self.idPrevious = 1
 
+	self.isEnd = false
+
 	self:generate()
 end
 
@@ -94,7 +96,7 @@ end
 function BottomPath:update(dt, progress)
 	self.progress = progress
 
-	if self.current < self.nbSteps or self.progress < 100 then
+	if self.current <= self.nbSteps then
 		if self.progress > 1 then
 			self.progress = 1
 		end
@@ -102,6 +104,8 @@ function BottomPath:update(dt, progress)
 		if self.progress == 1 and self.current == self.nbSteps then
 			self.progress = 110
 		end
+	else
+		self.isEnd = true
 	end
 end
 
@@ -129,9 +133,9 @@ function BottomPath:goNext(id)
 			end
 		end
 		EasyLD.flux.to(self.player.form, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
-		self.current = self.current + 1
-		self.previous = self.steps[self.current][self.idPrevious]
+		self.previous = self.steps[self.current + 1][self.idPrevious]
 	end
+	self.current = self.current + 1
 end
 
 function BottomPath:goBack()
@@ -141,6 +145,7 @@ end
 function BottomPath:draw()
 	self.background:draw()
 	self.area:draw()
+	self.player.form:draw()
 end
 
 return BottomPath

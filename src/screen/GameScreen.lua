@@ -11,21 +11,18 @@ local Boss = require 'Boss'
 
 function GameScreen:initialize()
 	---
-	self.boss = Boss:new(1)
 	self.player = Player:new()
-	self.bottomPath = BottomPath:new(10, self.player)
-	self.bottomFight = BottomFight:new(1, self.player, self.boss)
+	self.bottomPath = BottomPath:new(4, self.player)
 	self.topPath = TopPath:new(self.player, self.bottomPath)
 	self.projectiles = {}
-
-	--PAS OUBLIER DE LES VIDER LES PORJECTILKES 
-
 
 	---
 	font = EasyLD.font:new("assets/fonts/FORCED_SQUARE.ttf")
 	font:load(16, EasyLD.color:new(255,255,255))
 
-	self.fight = true
+	self.fight = false
+	self.level = 1
+	self.topPath:changeLevel(1, self.fight, self.bottomPath)
 end
 
 function GameScreen:preCalcul(dt)
@@ -33,12 +30,25 @@ function GameScreen:preCalcul(dt)
 end
 
 function GameScreen:update(dt)
-	self.topPath:update(dt)
+	self.topPath:update(dt, self.fight)
 
 	if self.fight then
 		self.bottomFight:update(dt)
+		if self.bottomFight.isEnd then
+			self.level = self.level + 1
+			self.fight = false
+			self.projectiles = {}
+			self.bottomPath = BottomPath:new(4, self.player, self.level)
+			self.topPath:changeLevel(self.level, self.fight, self.bottomPath)
+		end
 	else
 		self.bottomPath:update(dt, self.topPath.level:getProgress())
+		if self.bottomPath.isEnd then
+			self.fight = true
+			self.boss = Boss:new(self.level)
+			self.bottomFight = BottomFight:new(1, self.player, self.boss, self.level)
+			self.topPath:changeLevel(self.level, self.fight, self.bottomFight)
+		end
 	end
 
 	self.player:update(dt)

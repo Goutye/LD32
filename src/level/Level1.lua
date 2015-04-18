@@ -3,14 +3,19 @@ local class = require 'middleclass'
 local ILevel = require 'level.ILevel'
 local Level = class('Level', ILevel)
 
+local bNextDOWN = require 'bonus.NextDOWN'
+local bNextUP = require 'bonus.NextUP'
+
 function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = time
+	self.maxTime = 10 - (time - 1)
 	self.player = player
 	self.slow = 1
 	self.slowStart = 3
 	self.minPercent = 80
+	self.bonus = {}
+
 	-----------------------------------
 
 
@@ -45,6 +50,12 @@ function Level:initialize(time, hMax, player, upDown)
 			self.area:attach(seg)
 			self.length = self.length + self.step
 		end
+		if i == 7 and upDown then
+			table.insert(self.bonus, bNextUP:new(self.length + self.step + self.xStart, hMax/4))
+		end
+		if i == 4 and upDown then
+			table.insert(self.bonus, bNextDOWN:new(self.length + self.step + self.xStart, math.floor(hMax/4)*3))
+		end
 	end
 
 	self.lastPoint = seg.p2
@@ -67,7 +78,7 @@ function Level:initialize(time, hMax, player, upDown)
 	self.prevPercent = nil
 	self.levelBack = false
 	self.player:reset()
-	self.bonus = {}
+	self.bonusArea = self:createAreaBonus()
 
 	EasyLD.flux.to(self, 2, {slowStart = 1})
 end

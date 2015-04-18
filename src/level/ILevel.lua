@@ -84,7 +84,10 @@ function ILevel:goBack()
 	self.nbOut = 0
 	self.gotEnd = false
 	self.isDef = false
-	self.bonus[#self.bonus]:hide()
+	self.slow = 1
+	if #self.bonus > 0 then
+		self.bonus[#self.bonus]:hide()
+	end
 	self.isEnd = false
 	self.timer = EasyLD.timer.after(self.timeEase/2, self.start, self)
 	for i, v in ipairs(self.bonus) do

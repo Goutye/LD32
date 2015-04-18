@@ -16,9 +16,14 @@ function TopPath:initialize(player, bottomPath)
 	self.percentMin = 50
 
 	self.timeOut = 0
-	self.timeLevel = 4
+	self.numLevel = 1
 	self.currentTime = 0
-	self.level = Level:new(self.timeLevel, self.h, player, nil, bottomPath)
+
+	self.level = {}
+	self.listLevel = {}
+	self.listLevelFight = {}
+	self.listLevelPath = {}
+	self:loadLevel()
 
 	self.timer = nil
 	self.bottomPath = bottomPath
@@ -28,10 +33,31 @@ function TopPath:initialize(player, bottomPath)
 	self.percent = 100
 end
 
+function TopPath:loadLevel()
+	Level = require 'level.Level4'
+	table.insert(self.listLevelFight, Level)
+	for i = 0, 3 do
+		Level = require("level.Level" .. i)
+		table.insert(self.listLevelPath, Level)
+	end
+end
+
+function TopPath:changeLevel(i, fight, bottom)
+	self.listLevel = {}
+	if fight then
+		self.listLevel = self.listLevelFight
+	else
+		self.listLevel = self.listLevelPath
+	end
+	self.numLevel = i
+	self.bottomPath = bottom
+	self:generateNewLevel()
+end
+
 function TopPath:update(dt)
 	self.level:update(dt)
 	self.percent = self.level:getPercent()
-	
+
 	if self.level.isStart then
 		self.currentTime = self.currentTime + dt
 	end
@@ -67,10 +93,14 @@ end
 
 function TopPath:generateNewLevel()
 	self.bottomPath:goNext(self.level.next)
-	if self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and #self.bottomPath.steps[self.bottomPath.current + 2] > 1 then
-		self.level = Level:new(self.timeLevel, self.h, self.player, true, bottomPath)
+	if self.bottomPath.current ~= nil then
+		if self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and #self.bottomPath.steps[self.bottomPath.current + 2] > 1 then
+			self.level = self.listLevel[math.random(1, #self.listLevel)]:new(self.numLevel, self.h, self.player, true, bottomPath)
+		else
+			self.level = self.listLevel[math.random(1, #self.listLevel)]:new(self.numLevel, self.h, self.player, nil, bottomPath)
+		end
 	else
-		self.level = Level:new(self.timeLevel, self.h, self.player, nil, bottomPath)
+		self.level = self.listLevel[math.random(1, #self.listLevel)]:new(self.numLevel, self.h, self.player, nil, bottomPath)
 	end
 	self.timer = nil
 end

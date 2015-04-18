@@ -9,7 +9,7 @@ local bNextUP = require 'bonus.NextUP'
 function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = time
+	self.maxTime = 10 - (time-1)
 	self.player = player
 	self.slow = 1
 	self.slowStart = 3
@@ -72,7 +72,7 @@ function Level:initialize(time, hMax, player, upDown)
 
 	self.gotEnd = false
 
-	self.timeEase = time
+	self.timeEase = self.maxTime
 	self.easeType = "quadinout"
 	self.timeEaseEnd = 2
 	self.easeTypeEnd = "quadinout"

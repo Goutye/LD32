@@ -10,7 +10,7 @@ function Level:initialize(time, hMax, player)
 	self.area = EasyLD.area:new(point)
 	self.step = 300
 	self.length = 0
-	self.maxTime = time
+	self.maxTime = 10
 	self.slow = 1
 	self.slowStart = 3
 	self.minPercent = 80

@@ -10,10 +10,10 @@ local bFire = require 'bonus.Fire'
 function Level:initialize(time, hMax, player, upDown, bottom)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = time
+	self.maxTime = 9.5 + time / 2
 	self.player = player
 	self.slow = 1
-	self.slowStart = 3
+	self.slowStart = 1
 	self.minPercent = 80
 	self.bonus = {}
 	self.bottom = bottom
@@ -54,9 +54,9 @@ function Level:initialize(time, hMax, player, upDown, bottom)
 	for i = 1, 3 do 
 		segs[i] = EasyLD.segment:new(segs[i].p2:copy(), EasyLD.point:new(self.length + self.step + self.xStart, hMax/2))
 		self.area:attach(segs[i])
-		table.insert(self.bonus, bFire:new(self.length + self.step + self.xStart, hMax/2))
-		self.bonus[#self.bonus]:hide()
 	end
+	table.insert(self.bonus, bFire:new(self.length + self.step + self.xStart, hMax/2))
+	self.bonus[#self.bonus]:hide()
 	self.length = self.length + self.step
 
 	self.lastPoint = segs[1].p2
@@ -85,11 +85,13 @@ end
 
 function Level:startAtk()
 	self.player:cast()
+	self.slow = self.slow / 2
 end
 
 function Level:def()
 	self.isDef = true
 	self.player:def()
+	self.slow = self.slow / 2
 end
 
 function Level:fire()

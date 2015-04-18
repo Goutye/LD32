@@ -3,19 +3,19 @@ local class = require 'middleclass'
 local Boss = class('Boss')
 local Projectile = require 'Projectile'
 
-function Boss:initialize()
+function Boss:initialize(level)
 	self.h = 70
 	local c = EasyLD.box:new(0,0, 40, self.h, EasyLD.color:new(200,0,0))
 	self.sprite = EasyLD.area:new(c)
 
-	self.maxLife = 30
+	self.maxLife = 10 + level * 20
 	self.life = self.maxLife
 	self.boxMaxLife = EasyLD.box:new(0, 0, 200, 30, EasyLD.color:new(255,255,255), "line")
 	self.boxLife = EasyLD.box:new(5, 5, 190, 20, EasyLD.color:new(0,0,0,120), "fill")
 	self.boxMaxLife:moveTo(WINDOW_WIDTH-200, WINDOW_HEIGHT/4*3)
 	self.boxLife:moveTo(WINDOW_WIDTH-200 + 5, WINDOW_HEIGHT/4*3 + 5)
 
-	self.timeBeforeCast = 10
+	self.timeBeforeCast = 10 - (level -1)
 
 	self.timer = EasyLD.timer.after(math.random(5, 7) + self.timeBeforeCast, self.fire, self)
 	self.timerCast = EasyLD.timer.after(self.timeBeforeCast, self.cast, self)
@@ -46,7 +46,7 @@ function Boss:drawUI()
 	b.w = b.w * self.life/self.maxLife
 	b.c = EasyLD.color:new(200,40,40)
 	b:draw()
-	font:print(self.life .. "/" .. self.maxLife, 20, self.boxLife, "center", "center", EasyLD.color:new(255,255,255))
+	font:print(math.ceil(self.life) .. "/" .. self.maxLife, 20, self.boxLife, "center", "center", EasyLD.color:new(255,255,255))
 end
 
 function Boss:reset()

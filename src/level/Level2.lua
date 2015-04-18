@@ -5,11 +5,13 @@ local Level = class('Level', ILevel)
 
 local bSpeed = require 'bonus.Speed'
 local bSlow = require 'bonus.Slow'
+local bNextDOWN = require 'bonus.NextDOWN'
+local bNextUP = require 'bonus.NextUP'
 
-function Level:initialize(time, hMax, player)
+function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = time
+	self.maxTime = 10 - (time - 1)
 	self.player = player
 	self.slow = 1
 	self.slowStart = 3
@@ -65,6 +67,13 @@ function Level:initialize(time, hMax, player)
 
 	self.step = 150
 	for i = 6, 20 do
+		if i == 7 and upDown then
+			table.insert(self.bonus, bNextUP:new(self.length + self.step + self.xStart, hMax/4))
+		end
+		if i == 14 and upDown then
+			table.insert(self.bonus, bNextDOWN:new(self.length + self.step + self.xStart, math.floor(hMax/4)*3))
+		end
+
 		if i % 2 == 0 then
 			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(self.length + self.step + self.xStart, math.random(0, math.floor(hMax/4))))
 		else
