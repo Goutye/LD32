@@ -1,0 +1,97 @@
+return {
+-- Table: {1}
+{
+   {2},
+   {3},
+},
+-- Table: {2}
+{
+   {4},
+   {5},
+   {6},
+   {7},
+   {8},
+   {9},
+},
+-- Table: {3}
+{
+   {10},
+   {11},
+   {12},
+   {13},
+   {14},
+   {15},
+},
+-- Table: {4}
+{
+   ["ease"]="linear",
+},
+-- Table: {5}
+{
+   ["ease"]="linear",
+},
+-- Table: {6}
+{
+   ["translation"]={16},
+   ["ease"]="linear",
+},
+-- Table: {7}
+{
+   ["ease"]="linear",
+},
+-- Table: {8}
+{
+   ["translation"]={17},
+   ["ease"]="linear",
+},
+-- Table: {9}
+{
+   ["ease"]="linear",
+},
+-- Table: {10}
+{
+   ["ease"]="linear",
+},
+-- Table: {11}
+{
+   ["ease"]="linear",
+},
+-- Table: {12}
+{
+   ["translation"]={18},
+   ["ease"]="linear",
+},
+-- Table: {13}
+{
+   ["ease"]="linear",
+},
+-- Table: {14}
+{
+   ["translation"]={19},
+   ["ease"]="linear",
+},
+-- Table: {15}
+{
+   ["ease"]="linear",
+},
+-- Table: {16}
+{
+   ["y"]=-3.066573,
+   ["x"]=-5.621044,
+},
+-- Table: {17}
+{
+   ["y"]=-6.214235,
+   ["x"]=-1.176131,
+},
+-- Table: {18}
+{
+   ["y"]=3.066573,
+   ["x"]=5.621044,
+},
+-- Table: {19}
+{
+   ["y"]=6.214235,
+   ["x"]=1.176131,
+},
+}
