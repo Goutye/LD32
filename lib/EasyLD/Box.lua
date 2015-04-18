@@ -140,7 +140,7 @@ function Box:collidePolygon(poly)
 end
 
 function Box:collideBox(b)
-	if self.angle == 0 and area.angle == 0 then
+	if self.angle == 0 and b.angle == 0 then
 		return EasyLD.collide:AABB_AABB(self, b)
 	else
 		return EasyLD.collide:OBB_OBB(self, b)

@@ -1,0 +1,146 @@
+local class = require 'middleclass'
+
+local BottomPath = class('BottomPath')
+
+local function getPositionSegment(p1, p2, percent)
+	local step = WINDOW_WIDTH / 3
+	local a = (p2.y - p1.y) / (p2.x - p1.x)
+	local x = percent * step
+	return p1.x + x, p1.y + a * x
+end
+
+function BottomPath:initialize(nbSteps, player)
+	self.steps = {}
+	self.stepsCirc = {}
+	self.h = WINDOW_HEIGHT / 4
+	self.nbSteps = nbSteps
+	self.area = nil
+	self.background = EasyLD.box:new(0, self.h * 3, WINDOW_WIDTH, self.h, EasyLD.color:new(0,0,0), "fill")
+
+	self.current = 1 --step
+	self.step = WINDOW_WIDTH / 3
+
+	self.previous = nil
+	self.player = player
+	self.posPlayer = EasyLD.point:new(30, 0)
+	self.progress = 0
+
+	self.timeEase = 0.5
+	self.typeEase = "quadout"
+
+	self.idNext = 1
+	self.idPrevious = 1
+
+	self:generate()
+end
+
+function BottomPath:generate()
+	local yPos = self.h * 3 + self.h / 2
+	local xPos = 30
+	local p1, p2 = EasyLD.point:new(xPos, yPos), EasyLD.point:new(WINDOW_WIDTH/3 + xPos, yPos)
+	table.insert(self.steps, {p1})
+	table.insert(self.steps, {p2})
+	self.area = EasyLD.area:new(EasyLD.segment:new(p1, p2))
+	self.previous = p1
+
+	local circ = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
+	self.area:attach(circ)
+	table.insert(self.stepsCirc, {circ})
+
+	local xPoint = WINDOW_WIDTH * 2 / 3 + xPos
+	local yPoint = (self.h - 10) / 4
+
+	for i = 2, self.nbSteps do
+		if i == 3 then
+			local p = p2
+			local r1,r2 = math.random(-1,1), math.random(-1,1)
+			while r1 == r2 do r2 = math.random(-1,1) end
+
+			p1 = EasyLD.point:new(xPoint, r1 * yPoint  + yPos)
+			p2 = EasyLD.point:new(xPoint, r2 * yPoint  + yPos)
+			circ = EasyLD.circle:new(p.x, p.y, 5, EasyLD.color:new(100,0,0))
+			table.insert(self.steps, {p1, p2})
+			table.insert(self.stepsCirc, {circ})
+			self.area:attach(EasyLD.segment:new(p, p1))
+			self.area:attach(EasyLD.segment:new(p, p2))
+			self.area:attach(circ)
+		elseif i == 4 then
+			local p = p2
+			p2 = EasyLD.point:new(xPoint, math.random(-1,1) * yPoint  + yPos)
+			circ1 = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
+			circ2 = EasyLD.circle:new(p.x, p.y, 5, EasyLD.color:new(100,0,0))
+			table.insert(self.steps, {p2})
+			table.insert(self.stepsCirc, {circ1, circ2})
+			self.area:attach(EasyLD.segment:new(p1, p2))
+			self.area:attach(EasyLD.segment:new(p, p2))
+			self.area:attach(circ1)
+			self.area:attach(circ2)
+		else
+			p1 = p2
+			p2 = EasyLD.point:new(xPoint, math.random(-1,1) * yPoint  + yPos)
+			circ = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
+			table.insert(self.steps, {p2})
+			table.insert(self.stepsCirc, {circ})
+			self.area:attach(EasyLD.segment:new(p1, p2))
+			self.area:attach(circ)
+		end
+	end
+
+	circ = EasyLD.circle:new(p2.x, p2.y, 5, EasyLD.color:new(100,0,0))
+	self.area:attach(circ)
+	table.insert(self.stepsCirc, {circ})
+end
+
+function BottomPath:update(dt, progress)
+	self.progress = progress
+
+	if self.current < self.nbSteps or self.progress < 100 then
+		if self.progress > 1 then
+			self.progress = 1
+		end
+		self.player:moveTo(getPositionSegment(self.previous, self.steps[self.current + 1][self.idNext], self.progress))
+		if self.progress == 1 and self.current == self.nbSteps then
+			self.progress = 110
+		end
+	end
+end
+
+function BottomPath:goNext(id)
+	if self.current < self.nbSteps then
+		self.idPrevious = self.idNext
+		self.idNext = id or 1
+
+		if self.steps[self.current + 2] ~= nil and #self.steps[self.current + 2] > 1 and self.steps[self.current + 2][1].y > self.steps[self.current + 2][2].y then
+			if self.idNext == 1 then
+				self.idNext = 2
+			else
+				self.idNext = 1
+			end
+		end
+
+		for i = self.current + 1, self.current + 2 do
+			local points = self.steps[i]
+			local circs = self.stepsCirc[i]
+			for i,v in ipairs(points) do
+				EasyLD.flux.to(v, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
+			end
+			for i,v in ipairs(circs) do
+				EasyLD.flux.to(v, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
+			end
+		end
+		EasyLD.flux.to(self.player.form, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
+		self.current = self.current + 1
+		self.previous = self.steps[self.current][self.idPrevious]
+	end
+end
+
+function BottomPath:goBack()
+	EasyLD.flux.to(self.player.form, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
+end
+
+function BottomPath:draw()
+	self.background:draw()
+	self.area:draw()
+end
+
+return BottomPath

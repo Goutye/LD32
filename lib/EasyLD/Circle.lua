@@ -14,6 +14,7 @@ function Circle:initialize(x, y, r, c, mode)
 	self.c = c or EasyLD.color:new(255,255,255)
 	self.mode = mode or "fill"
 	self.angle = 0
+	self.display = true
 
 	if c == nil then
 		self.c = EasyLD.color:new(255,255,255)
@@ -51,7 +52,7 @@ function Circle:draw(mode, nbSeg)
 		mode = self.mode
 	end
 
-	if self.img == nil then
+	if self.img == nil and self.display then
 		EasyLD.graphics:circle(mode, self, nbSeg, self.c)
 	else
 		if self.imgType == "center" then

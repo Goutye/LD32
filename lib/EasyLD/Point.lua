@@ -18,10 +18,12 @@ function Point.static:projDot(p1, axis, pos)
 	return axis:dot(v2) / (norm * norm)
 end
 
-function Point:initialize(x, y, color)
+function Point:initialize(x, y, color, display)
 	self.x = x
 	self.y = y
 	self.c = color or EasyLD.color:new(255,255,255)
+	if display == nil then display = true end
+	self.display = display
 	self.angle = 0
 end
 
@@ -78,7 +80,7 @@ function Point:dot(v)
 end
 
 function Point:draw()
-	if self.img == nil then
+	if self.img == nil and self.display then
 		EasyLD.graphics:point(self, self.c)
 	else
 		if self.imgType == "center" then

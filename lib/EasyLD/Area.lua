@@ -18,6 +18,7 @@ function Area:initialize(obj, ox, oy)
 	self.angle = 0
 
 	self.follower = obj
+	self.display = true
 end
 
 function Area:attach(obj)
@@ -101,8 +102,10 @@ function Area:rotateTo(angle, ox, oy)
 end
 
 function Area:draw()
-	for _,o in ipairs(self.forms) do
-		o:draw()
+	if self.display then
+		for _,o in ipairs(self.forms) do
+			o:draw()
+		end
 	end
 end
 

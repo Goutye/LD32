@@ -3,6 +3,7 @@ function drystal.init()
 end
 
 function drystal.update(dt)
+	dt = EasyLD:preCalcul(dt)
 	EasyLD:update(dt)
 	EasyLD:updateComponents(dt)
 end
