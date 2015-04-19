@@ -18,6 +18,7 @@ end
 function NextUP:get(level)
 	if not self.isGet then
 		level.next = 1
+		level.text = "WAY UP!"
 		self.isGet = true
 		self.area.display = false
 	end

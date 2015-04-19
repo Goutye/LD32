@@ -15,6 +15,7 @@ end
 
 function Atk:get(level)
 	if not self.isGet then
+		level.text = "CASTING"
 		level:startAtk()
 		level.bonus[#level.bonus]:reset()
 		for i = 1, #level.bonus - 1 do

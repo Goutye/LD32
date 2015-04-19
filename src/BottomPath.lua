@@ -164,10 +164,12 @@ function BottomPath:goNext(id)
 					self.player.maxLife = self.player.maxLife + v.bLife
 					v.bLife = nil
 					v:attachImg(img, "center")
+					self.text = "+10 PV"
 				elseif v.bBoost ~= nil and j == self.current + 1 and i == self.idPrevious then
 					self.player.dmg = self.player.dmg + v.bBoost
 					v.bBoost = nil
 					v:attachImg(img, "center")
+					self.text = "+2 DMG"
 				end
 			end
 		end

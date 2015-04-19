@@ -134,7 +134,7 @@ function Player:getHit(dmg)
 	EasyLD.camera:shake({x = 5}, 0.5)
 	if self.isDef then
 		self:changeAnim8("yeah")
-		return
+		return false
 	end
 
 	if self.life - dmg < 0 then
@@ -144,6 +144,7 @@ function Player:getHit(dmg)
 
 	EasyLD.flux.to(self, 0.8, {life = -dmg}, "relative")
 	EasyLD.flux.to(self.areaAnim, 0.3, {x = -10}, "relative"):ease("backout"):after(0.8, {x = self.areaAnim.x})
+	return true
 end
 
 function Player:restore()

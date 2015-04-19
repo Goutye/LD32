@@ -16,6 +16,7 @@ end
 function Fire:get(level)
 	if not self.isGet then
 		level:fire()
+		level.text = "FIRE!"
 		self.isGet = true
 		self.area.display = false
 	end

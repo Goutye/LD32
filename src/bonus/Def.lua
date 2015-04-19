@@ -15,6 +15,7 @@ end
 
 function Def:get(level)
 	if not self.isGet then
+		level.text = "DEFENSE"
 		level:def()
 		for i = 1, #level.bonus do
 			level.bonus[i]:hide()
@@ -26,7 +27,7 @@ end
 function Def:draw()
 	if self.area.display then
 		self.area:draw()
-		font:print("Defence", 20, self.area.forms[1], "center", "center", EasyLD.color:new(255,255,255))
+		font:print("Defense", 20, self.area.forms[1], "center", "center", EasyLD.color:new(255,255,255))
 	end
 end
 

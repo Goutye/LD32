@@ -18,6 +18,7 @@ end
 function Slow:get(level)
 	if not self.isGet then
 		level.slow = level.slow * 2
+		level.text = "SLOW"
 		self.isGet = true
 		self.area.display = false
 	end

@@ -72,12 +72,42 @@ function TopPath:update(dt)
 		end
 	end
 
+	if self.bottomPath.text ~= nil then
+		self:updateColor()
+		self.text = self.bottomPath.text
+		self.bottomPath.text = nil
+		self.timerColor2 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 2)
+		self.timerText = EasyLD.timer.after(1.5, TopPath.displayText, self, 2)
+	elseif self.level.text ~= nil then
+		if self.timerColor3 ~= nil then
+			EasyLD.timer.cancel(self.timerText3)
+			EasyLD.timer.cancel(self.timerColor3)
+			self.timerColor3 = nil
+		end
+		self:updateColor()
+		self.text = self.level.text
+		self.level.text = nil
+		self.timerColor3 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 3)
+		self.timerText3 = EasyLD.timer.after(1.5, TopPath.displayText, self, 3)
+	end
+
 	local tier = 100/3
 	local cinq = 100/5
 
-	if not self.level.isEnd then
+	if not self.level.isEnd and self.timerColor2 == nil and self.timerColor3 == nil then
 		self:updateColor()
 	end
+end
+
+function TopPath:displayText(id)
+	if id == 2 then
+		EasyLD.timer.cancel(self.timerColor2)
+		self.timerColor2 = nil
+	elseif id == 3 then
+		EasyLD.timer.cancel(self.timerColor3)
+		self.timerColor3 = nil
+	end
+	self.text = nil
 end
 
 function TopPath:nextLevel()
@@ -120,7 +150,15 @@ function TopPath:switchColor()
 end
 
 function TopPath:drawUI()
-	font:print(self.percent .. "%", 256, self.boxPercent, "center", "center", self.boxPercent.c)
+	local text = self.percent .. "%"
+	local size = 256
+	if self.text ~= nil then
+		text = self.text
+		if string.len(text) > 6 then
+			size = 150
+		end
+	end
+	font:print(text, size, self.boxPercent, "center", "center", self.boxPercent.c)
 end
 
 function TopPath:updateColor()

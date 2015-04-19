@@ -76,12 +76,20 @@ function GameScreen:update(dt)
 	for i,v in ipairs(self.projectiles) do
 		v:update(dt)
 		if v.dir.x < 0 and v:collide(self.player.sprite) then
-			self.player:getHit(v.dmg)
+			local wasHit = self.player:getHit(v.dmg)
+			if wasHit then
+				self.bottomFight.text = "OUCH"
+			else
+				self.bottomFight.text = "PARRY"
+			end
 			v:onEnd()
 			table.insert(mustRemove, i)
 		elseif v.dir.x > 0 and v:collide(self.boss.areaAnim) then
 			self.boss:getHit(v.dmg)
 			self.player:changeAnim8("yeah")
+			if not self.boss.isDead then
+				self.bottomFight.text = "NICE!"
+			end
 			v:onEnd()
 			table.insert(mustRemove, i)
 		end

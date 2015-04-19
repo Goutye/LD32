@@ -36,8 +36,10 @@ end
 
 function BottomFight:update(dt)
 	if self.boss.isDead then
+		self.text = "K.O.!"
 		self.timer = EasyLD.timer.after(0.4, self.onEnd, self)
 	elseif self.player.isDead then
+		self.text = "YOU DIED"
 		self.boss:reset()
 		self.player:restore()
 		--GO BACK => UI YOU DIED, TRY AGAIN

@@ -17,6 +17,7 @@ end
 
 function NextDOWN:get(level)
 	if not self.isGet then
+		level.text = "WAY DOWN!"
 		level.next = 2
 		self.isGet = true
 		self.area.display = false
