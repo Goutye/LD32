@@ -37,11 +37,11 @@ end
 function TopPath:loadLevel()
 	Level = require 'level.Level4'
 	table.insert(self.listLevelFight, Level)
-	for j = 1, 3 do
+	for j = 1, 4 do
 		self.listLevelPath[j] = {}
 		for i = 1, 8 do
 			Level = require("level.Level" .. j .. "_" .. i)
-			--Level = require("level.Level3_4")
+			--Level = require("level.Level1_8")
 			table.insert(self.listLevelPath[j], Level)
 		end
 	end
@@ -193,7 +193,7 @@ function TopPath:drawUI()
 	local key = self.level.key or 0
 	local maxKey = self.level.maxKey or 0
 	font:print(key.."/"..maxKey, 40, EasyLD.box:new(WINDOW_WIDTH-200, 5, 195, 50), "right","center", self.boxPercent.c)
-	font:print("Level: " .. self.numLevel ..".".. self.level.num, 40, EasyLD.box:new(5, 5, 195, 50), "left","center", self.boxPercent.c)
+	font:print("Level: " .. self.numLevel ..".".. (self.intraLevel or self.level.num), 40, EasyLD.box:new(5, 5, 195, 50), "left","center", self.boxPercent.c)
 
 	local text = ""
 	for i = 1, self.level.nbOut do text = text .. "X" end

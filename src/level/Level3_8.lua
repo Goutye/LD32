@@ -20,9 +20,10 @@ function Level:initialize(time, hMax, player, upDown)
 	self.minPercent = 80
 	self.bonus = {}
 	self.key = 0
-	self.maxKey = 1
-	self.maxOut = 3
-	self.num = 4
+	self.maxKey = 9
+	self.maxOut = 2
+	self.num = 5
+	self.timer = {}
 	-----------------------------------
 
 
@@ -36,36 +37,129 @@ function Level:initialize(time, hMax, player, upDown)
 	self.area:attach(seg)
 	self.length = self.length + self.step
 
-	for i = 2, 4 do
-		if i % 2 == 0 then
-			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(30, hMax/3-100)))
-		else
-			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(hMax/3*2, hMax-30)))
-		end
-		self.area:attach(seg)
-		self.length = self.length + self.step
-	end
-	table.insert(self.bonus, bSlow:new(3 * self.step + self.xStart, hMax/2))
+	--L
+	i = 2
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3*2, self.step, 20)
+	self.area:attach(seg)
+	self.length = self.length + self.step*2
+	table.insert(self.bonus, bKey:new(i * self.step + self.xStart, hMax/3))
 
+	--U
 	i = 4
-	local b = EasyLD.box:new(i * self.step + self.xStart - 20, hMax/3+50, 40, hMax/3)
-	self.area:attach(b)
-	table.insert(self.bonus, bDeath:new(4 * self.step + self.xStart-60, hMax/2))
-	table.insert(self.bonus, bDeath:new(4 * self.step + self.xStart+60, hMax/2))
-	table.insert(self.bonus, bDeath:new(4 * self.step + self.xStart-60, hMax/3*2))
-	table.insert(self.bonus, bDeath:new(4 * self.step + self.xStart+60, hMax/3*2))
-	table.insert(self.bonus, bKey:new(4 * self.step + self.xStart, hMax/3*2 + 30))
-	table.insert(self.bonus, bSpeed:new(5 * self.step + self.xStart, hMax/2))
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new((i+1) * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3*2, self.step + 20, 20)
+	self.area:attach(seg)
+	self.length = self.length + self.step*2
+	table.insert(self.bonus, bKey:new((i+1) * self.step + self.xStart, hMax/3))
 
-	for i = 5, 8 do
-		if i % 2 == 0 then
-			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(30, hMax/3)))
-		else
-			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(hMax/3*2, hMax-30)))
-		end
-		self.area:attach(seg)
-		self.length = self.length + self.step
-	end
+	--D
+	i = 6
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3+20, 20, hMax/3)
+	self.area:attach(seg)
+	seg:rotate(-math.pi/4*1.3, seg.x, seg.y)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3*2, 20, hMax/3)
+	self.area:attach(seg)
+	seg:rotate(-math.pi/4*2.7, seg.x, seg.y)
+	self.length = self.length + self.step*2
+	table.insert(self.bonus, bKey:new((i+0.5) * self.step + self.xStart, hMax/2))
+
+	--U
+	i = 8
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new((i+1) * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3*2, self.step + 20, 20)
+	self.area:attach(seg)
+	self.length = self.length + self.step*2
+	table.insert(self.bonus, bKey:new((i+0.7) * self.step + self.xStart, hMax/2))
+
+	--M
+	i = 10
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/2)
+	self.area:attach(seg)
+	seg:rotate(-math.pi/3, seg.x, seg.y)
+	local seg = EasyLD.box:new((i+1) * self.step + self.xStart, hMax/3, 20, hMax/2)
+	self.area:attach(seg)
+	seg:rotate(math.pi/3, seg.x, seg.y)
+	local seg = EasyLD.box:new((i+1) * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	table.insert(self.bonus, bKey:new((i+0.5) * self.step + self.xStart, hMax/2-20))
+
+	i = 12
+	local seg = EasyLD.segment:new(EasyLD.point:new(i * self.step + self.xStart, hMax/3*2), EasyLD.point:new( (i+1) * self.step + self.xStart, hMax/3*2))
+	self.area:attach(seg)
+	self.length = self.length + self.step*2
+
+	--D
+	i = 14
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3+20, 20, hMax/3)
+	self.area:attach(seg)
+	seg:rotate(-math.pi/4*1.3, seg.x, seg.y)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3*2, 20, hMax/3)
+	self.area:attach(seg)
+	seg:rotate(-math.pi/4*2.7, seg.x, seg.y)
+	self.length = self.length + self.step*2
+	table.insert(self.bonus, bKey:new((i+0.5) * self.step + self.xStart, hMax/2))
+
+	--A
+	i = 16
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new((i+1) * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, self.step + 20, 20)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/2, self.step + 20, 20)
+	self.area:attach(seg)
+	self.length = self.length + self.step*2
+	table.insert(self.bonus, bKey:new((i+0.7) * self.step + self.xStart, hMax/3))
+
+	--R
+	i = 18
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new((i+1) * self.step + self.xStart, hMax/3, 20, hMax/2 - hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, self.step + 20, 20)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/2, self.step + 20, 20)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/2, 20, hMax/3)
+	self.area:attach(seg)
+	seg:rotate(-math.pi/3, seg.x, seg.y)
+	self.length = self.length + self.step*2
+	table.insert(self.bonus, bKey:new((i+0.5) * self.step + self.xStart, hMax/3+20))
+
+	--E
+	i = 20
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, 20, hMax/3)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3*2, self.step + 20, 20)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/3, self.step + 20, 20)
+	self.area:attach(seg)
+	local seg = EasyLD.box:new(i * self.step + self.xStart, hMax/2, self.step + 20, 20)
+	self.area:attach(seg)
+	self.length = self.length + self.step*2
+	table.insert(self.bonus, bKey:new((i+1) * self.step + self.xStart, hMax/3))
+
+	i = 22
+	local seg = EasyLD.segment:new(EasyLD.point:new(self.step + self.xStart, hMax/3*2), EasyLD.point:new( (i+1) * self.step + self.xStart, hMax/3*2))
+	self.area:attach(seg)
+	self.length = self.length + self.step*2
+
 
 	self.lastPoint = seg.p2
 

@@ -181,8 +181,8 @@ function Player:changeCursor(i)
 		self.aera = a
 	elseif i == 2 then
 		local c = EasyLD.circle:new(0,0, 30, EasyLD.color:new(0,150,0))
-		self.areaSeg = EasyLD.area:new(c)
-		self.aera = a
+		self.areaSeg = nil
+		self.aera = EasyLD.area:new(c)
 		self:tween2()
 	elseif i == 3 then
 		local p = EasyLD.circle:new(0, 0, 2, EasyLD.color:new(0,150,0))
@@ -212,7 +212,7 @@ function Player:tween3()
 end
 
 function Player:tween2()
-	self.tweenTimer3 = EasyLD.flux.to(self.areaSeg.forms[1], 1.5, {r = 10}):ease("quadinout"):after(1.5, {r = 50}):ease("quadinout"):oncomplete(function () self:tween2() end) 
+	self.tweenTimer3 = EasyLD.flux.to(self.area.forms[1], 2, {r = 15}):ease("quintinout"):after(2, {r = 50}):ease("quintinout"):oncomplete(function () self:tween2() end) 
 end
 
 return Player

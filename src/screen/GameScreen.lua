@@ -12,7 +12,7 @@ local Boss = require 'Boss'
 function GameScreen:initialize()
 	---
 	self.player = Player:new()
-	self.bottomPath = BottomPath:new(3, self.player, 1)
+	self.bottomPath = BottomPath:new(1, self.player, 1)
 	self.topPath = TopPath:new(self.player, self.bottomPath)
 	self.projectiles = {}
 

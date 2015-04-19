@@ -54,7 +54,7 @@ function BottomPath:initialize(nbSteps, player, level)
 	self.boxTower4:attachImg(self.tower)
 end
 
-function BottomPath:generate1()
+function BottomPath:generate1(id)
 	local img = EasyLD.image:new("assets/tilesets/circle.png")
 	local bLife = EasyLD.image:new("assets/tilesets/lifeUp.png")
 	local bBoost = EasyLD.image:new("assets/tilesets/boost.png")
@@ -74,8 +74,11 @@ function BottomPath:generate1()
 	local xPoint = self.step * 2 + xPos
 	local yPoint = (self.h - 10) / 4
 
+	local numDual = id or 5
+	numDual = numDual + 2
+
 	for i = 2, self.nbSteps do
-		if i == 7 then
+		if i == numDual then
 			local p = p2
 			local r1,r2 = math.random(-1,1), math.random(-1,1)
 			while r1 == r2 do r2 = math.random(-1,1) end
@@ -89,7 +92,7 @@ function BottomPath:generate1()
 			self.areaSeg:attach(EasyLD.segment:new(p, p1))
 			self.areaSeg:attach(EasyLD.segment:new(p, p2))
 			self.area:attach(circ)
-		elseif i == 8 then
+		elseif i == numDual + 1 then
 			local p = p2
 			p2 = EasyLD.point:new(xPoint, math.random(-1,1) * yPoint  + yPos)
 			circ1 = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
@@ -130,10 +133,14 @@ function BottomPath:generate1()
 end
 
 function BottomPath:generate2()
-	self:generate1()
+	self:generate1(2)
 end
 
 function BottomPath:generate3()
+	self:generate1()
+end
+
+function BottomPath:generate4()
 	self:generate1()
 end
 
