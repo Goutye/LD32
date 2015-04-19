@@ -1,26 +1,27 @@
 local class = require 'middleclass'
 
 local IBonus = require 'bonus.IBonus'
-local NextUP = class('NextUP', IBonus)
+local Death = class('Death', IBonus)
 
-function NextUP:initialize(x, y)
+function Death:initialize(x, y)
 	local c = EasyLD.circle:new(0, 0, 30, EasyLD.color:new(0, 0, 200))
-	c:attachImg(EasyLD.image:new("assets/tilesets/bonusUp.png"), "center")
+	c:attachImg(EasyLD.image:new("assets/tilesets/bonusDeath.png"), "center")
 	self.area = EasyLD.area:new(c)
 	self.area:moveTo(x, y)
 	self.isGet = false
 end
 
-function NextUP:update(dt)
+function Death:update(dt)
 
 end
 
-function NextUP:get(level)
+function Death:get(level)
 	if not self.isGet then
-		level.next = 1
+		level.timeOut = level.currentTime
+		level.isEnd = true
 		self.isGet = true
 		self.area.display = false
 	end
 end
 
-return NextUP
+return Death

@@ -19,6 +19,8 @@ function Player:initialize()
 	self.boxMaxLife:moveTo(0, WINDOW_HEIGHT/4*3)
 	self.boxLife:moveTo(5, WINDOW_HEIGHT/4*3 + 5)
 
+	self.dmg = 10
+
 	------
 	point = EasyLD.point:new(25,50)
 	pointChest = EasyLD.point:new(25,35)
@@ -141,6 +143,7 @@ function Player:getHit(dmg)
 	end
 
 	EasyLD.flux.to(self, 0.8, {life = -dmg}, "relative")
+	EasyLD.flux.to(self.areaAnim, 0.3, {x = -10}, "relative"):ease("backout"):after(0.8, {x = self.areaAnim.x})
 end
 
 function Player:restore()
@@ -151,7 +154,7 @@ end
 function Player:fire(perc)
 	self:changeAnim8("normal")
 	self.sprite.forms[1].c = EasyLD.color:new(0, 250, 0)
-	table.insert(engine.screen.projectiles, Projectile:new(self.sprite.x + 10, self.sprite.y + self.h/2, 1, perc/10, perc))
+	table.insert(engine.screen.projectiles, Projectile:new(self.sprite.x + 10, self.sprite.y + self.h/2, 1, perc/100*self.dmg, perc))
 end
 
 return Player

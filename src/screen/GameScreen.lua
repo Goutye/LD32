@@ -32,7 +32,7 @@ function GameScreen:preCalcul(dt)
 	if self.proj ~= nil then
 		if self.proj.dmg > self.boss.life and not self.boss.isDead then
 			self.slower = true
-			dt = dt * math.min(1/10 + (self.boss.areaAnim.x - self.proj.sprite.x)/(WINDOW_WIDTH/4)*9/10, 1)
+			dt = dt * math.min(2/10 + math.abs(self.boss.areaAnim.x - self.proj.sprite.x)/(WINDOW_WIDTH/4)*8/10, 1)
 		elseif self.boss.isDead then
 			dt = self.lastDt + 0.0001
 

@@ -46,17 +46,19 @@ end
 
 function BottomPath:generate()
 	local img = EasyLD.image:new("assets/tilesets/circle.png")
+	local bLife = EasyLD.image:new("assets/tilesets/lifeUp.png")
+	local bBoost = EasyLD.image:new("assets/tilesets/boost.png")
 	local yPos = self.h * 3 + self.h / 2
 	local xPos = 30
 	local p1, p2 = EasyLD.point:new(xPos, yPos), EasyLD.point:new(self.step + xPos, yPos)
 	table.insert(self.steps, {p1})
 	table.insert(self.steps, {p2})
-	self.area = EasyLD.area:new(EasyLD.segment:new(p1, p2))
+	self.areaSeg = EasyLD.area:new(EasyLD.segment:new(p1, p2))
 	self.previous = p1
 
 	local circ = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
 	circ:attachImg(img, "center")
-	self.area:attach(circ)
+	self.area = EasyLD.area:new(circ)
 	table.insert(self.stepsCirc, {circ})
 
 	local xPoint = self.step * 2 + xPos
@@ -74,20 +76,22 @@ function BottomPath:generate()
 			circ:attachImg(img, "center")
 			table.insert(self.steps, {p1, p2})
 			table.insert(self.stepsCirc, {circ})
-			self.area:attach(EasyLD.segment:new(p, p1))
-			self.area:attach(EasyLD.segment:new(p, p2))
+			self.areaSeg:attach(EasyLD.segment:new(p, p1))
+			self.areaSeg:attach(EasyLD.segment:new(p, p2))
 			self.area:attach(circ)
 		elseif i == 4 then
 			local p = p2
 			p2 = EasyLD.point:new(xPoint, math.random(-1,1) * yPoint  + yPos)
 			circ1 = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
 			circ2 = EasyLD.circle:new(p.x, p.y, 5, EasyLD.color:new(100,0,0))
-			circ1:attachImg(img, "center")
-			circ2:attachImg(img, "center")
+			circ1:attachImg(bLife, "center")
+			circ2:attachImg(bBoost, "center")
+			circ1.bLife = 10
+			circ2.bBoost = 2
 			table.insert(self.steps, {p2})
 			table.insert(self.stepsCirc, {circ1, circ2})
-			self.area:attach(EasyLD.segment:new(p1, p2))
-			self.area:attach(EasyLD.segment:new(p, p2))
+			self.areaSeg:attach(EasyLD.segment:new(p1, p2))
+			self.areaSeg:attach(EasyLD.segment:new(p, p2))
 			self.area:attach(circ1)
 			self.area:attach(circ2)
 		else
@@ -97,7 +101,7 @@ function BottomPath:generate()
 			circ:attachImg(img, "center")
 			table.insert(self.steps, {p2})
 			table.insert(self.stepsCirc, {circ})
-			self.area:attach(EasyLD.segment:new(p1, p2))
+			self.areaSeg:attach(EasyLD.segment:new(p1, p2))
 			self.area:attach(circ)
 		end
 	end
@@ -106,6 +110,11 @@ function BottomPath:generate()
 	circ:attachImg(img, "center")
 	self.area:attach(circ)
 	table.insert(self.stepsCirc, {circ})
+
+	self.areaCirc = self.area
+	self.area = EasyLD.area:new(self.area)
+	self.area:attach(self.areaSeg)
+	--self.area = self.areaSeg
 end
 
 function BottomPath:update(dt, progress)
@@ -142,14 +151,24 @@ function BottomPath:goNext(id)
 			end
 		end
 
-		for i = self.current + 1, self.current + 2 do
-			local points = self.steps[i]
-			local circs = self.stepsCirc[i]
+		local img = EasyLD.image:new("assets/tilesets/circle.png")
+		for j = self.current + 1, self.current + 2 do
+			local points = self.steps[j]
+			local circs = self.stepsCirc[j]
 			for i,v in ipairs(points) do
 				EasyLD.flux.to(v, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
 			end
 			for i,v in ipairs(circs) do
 				EasyLD.flux.to(v, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
+				if v.bLife ~= nil and j == self.current + 1 and i == self.idPrevious then
+					self.player.maxLife = self.player.maxLife + v.bLife
+					v.bLife = nil
+					v:attachImg(img, "center")
+				elseif v.bBoost ~= nil and j == self.current + 1 and i == self.idPrevious then
+					self.player.dmg = self.player.dmg + v.bBoost
+					v.bBoost = nil
+					v:attachImg(img, "center")
+				end
 			end
 		end
 		EasyLD.flux.to(self.player.form, self.timeEase, {x = -self.step}, "relative"):ease(self.typeEase)
@@ -169,7 +188,8 @@ end
 function BottomPath:draw()
 	self.background:draw()
 	self.map:draw(math.floor(self.mapDec.x), self.mapDec.y + self.h * 3, 30, 5, self.mapBegin.x, self.mapBegin.y)
-	self.area:draw()
+	self.areaSeg:draw()
+	self.areaCirc:draw("reverse")
 	self.boxTower:draw()
 	self.player.form:draw()
 end

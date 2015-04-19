@@ -26,7 +26,7 @@ end
 function Def:draw()
 	if self.area.display then
 		self.area:draw()
-		font:print("Def", 20, self.area.forms[1], "center", "center", EasyLD.color:new(255,255,255))
+		font:print("Defence", 20, self.area.forms[1], "center", "center", EasyLD.color:new(255,255,255))
 	end
 end
 

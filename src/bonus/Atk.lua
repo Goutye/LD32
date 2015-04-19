@@ -26,7 +26,7 @@ end
 function Atk:draw()
 	if self.area.display then
 		self.area:draw()
-		font:print("Atk", 20, self.area.forms[1], "center", "center", EasyLD.color:new(255,255,255))
+		font:print("Attack", 20, self.area.forms[1], "center", "center", EasyLD.color:new(255,255,255))
 	end
 end
 

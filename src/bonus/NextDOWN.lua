@@ -4,7 +4,9 @@ local IBonus = require 'bonus.IBonus'
 local NextDOWN = class('NextDOWN', IBonus)
 
 function NextDOWN:initialize(x, y)
-	self.area = EasyLD.area:new(EasyLD.circle:new(0, 0, 30, EasyLD.color:new(0, 0, 200)))
+	local c = EasyLD.circle:new(0, 0, 30, EasyLD.color:new(0, 0, 200))
+	c:attachImg(EasyLD.image:new("assets/tilesets/bonusDown.png"), "center")
+	self.area = EasyLD.area:new(c)
 	self.area:moveTo(x, y)
 	self.isGet = false
 end

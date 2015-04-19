@@ -4,7 +4,9 @@ local IBonus = require 'bonus.IBonus'
 local Speed = class('Speed', IBonus)
 
 function Speed:initialize(x, y)
-	self.area = EasyLD.area:new(EasyLD.circle:new(0, 0, 30, EasyLD.color:new(200, 0, 0)))
+	local c = EasyLD.circle:new(0, 0, 30, EasyLD.color:new(0, 0, 200))
+	c:attachImg(EasyLD.image:new("assets/tilesets/bonusSpeed.png"), "center")
+	self.area = EasyLD.area:new(c)
 	self.area:moveTo(x, y)
 	self.isGet = false
 end
