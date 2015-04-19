@@ -2,16 +2,28 @@ local class = require 'middleclass'
 
 local Music = class('Music')
 
-function Music:initialize(name)
-	self.m = drystal.load_music(name)
+function Music:initialize(name, sfx)
+	if sfx then
+		self.m = drystal.load_sound(name)
+	else
+		self.m = drystal.load_music(name)
+	end
+	self.sfx = sfx
 	self.looping = false
 	self.isPlaying = false
 	self.isPaused = false
 	self.isStopped = true
 end
 
-function Music:play(callback)
-	self.m:play(self.looping, callback)
+function Music:play(callback, vol)
+	if callback == nil then
+		callback = function () end
+	end
+	if self.sfx then
+		self.m:play(vol or 1)
+	else
+		self.m:play(self.looping, callback)
+	end
 	--TODO => Callback BUT callback to put isPlaying to false (Easy => self:onEnd(callback))
 	self.isPlaying = true
 	self.isPaused = false

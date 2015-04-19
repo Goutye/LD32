@@ -67,8 +67,10 @@ function TopPath:update(dt)
 		self.timer = EasyLD.timer.after(1, TopPath.nextLevel, self)
 		if self.percent > self.percentMin then
 			self.timerColor = EasyLD.timer.every(0.12, TopPath.switchColor, self)
+			engine.sfx.ok:play()
 		else
 			self.timerColor = EasyLD.timer.every(0.2, TopPath.switchColor, self)
+			engine.sfx.fail:play()
 		end
 	end
 
@@ -100,10 +102,10 @@ function TopPath:update(dt)
 end
 
 function TopPath:displayText(id)
-	if id == 2 then
+	if id == 2 and self.timerColor2 ~= nil then
 		EasyLD.timer.cancel(self.timerColor2)
 		self.timerColor2 = nil
-	elseif id == 3 then
+	elseif id == 3 and self.timerColor3 ~= nil then
 		EasyLD.timer.cancel(self.timerColor3)
 		self.timerColor3 = nil
 	end

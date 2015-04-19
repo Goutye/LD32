@@ -58,6 +58,17 @@ end
 function Boss:update(dt)
 end
 
+function Boss:stop()
+	if self.timer ~= nil then
+		EasyLD.timer.cancel(self.timer)
+		self.timer = nil
+	end
+	if self.timerCast ~= nil then
+		EasyLD.timer.cancel(self.timerCast)
+		self.timerCast = nil
+	end
+end
+
 function Boss:changeAnim8(key)
 	self.currentAnim8:pause()
 	self.currentAnim8 = self.anim8[key]
@@ -66,6 +77,7 @@ function Boss:changeAnim8(key)
 end
 
 function Boss:fire()
+	engine.sfx.missileOut:play()
 	self:changeAnim8("fire")
 	table.insert(engine.screen.projectiles, Projectile:new(self.sprite.x - 10, self.sprite.y+ self.h/2, -1, 10))
 	self.timer = EasyLD.timer.after(self.timeBeforeCast + math.random(5, 7), self.fire, self)
@@ -74,8 +86,10 @@ function Boss:fire()
 end
 
 function Boss:cast()
+	engine.sfx.bossCast:play()
 	self:changeAnim8("atk")
 	self.sprite.forms[1].c = EasyLD.color:new(200,0,200)
+	self.timerCast = nil
 end
 
 function Boss:draw()
@@ -108,6 +122,7 @@ end
 function Boss:getHit(dmg)
 	if self.life - dmg < 0 then
 		self.isDead = true
+		engine.sfx.bossDead:play()
 		dmg = self.life
 	end
 	EasyLD.flux.to(self, 0.8, {life = -dmg}, "relative")

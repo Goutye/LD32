@@ -32,6 +32,7 @@ end
 
 function BottomFight:onEnd()
 	self.isEnd = true
+	self.boss:stop()
 end
 
 function BottomFight:update(dt)

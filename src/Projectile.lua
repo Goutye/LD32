@@ -38,7 +38,6 @@ function Projectile:collide(area)
 end
 
 function Projectile:onEnd(x, y)
-	--explode
 	if self.timer ~= nil then
 		EasyLD.timer.cancel(self.timer)
 	end

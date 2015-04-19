@@ -26,6 +26,7 @@ function GameScreen:initialize()
 
 	self.lastDt = 1
 	self.slower = false
+	self.music = false
 end
 
 function GameScreen:preCalcul(dt)
@@ -48,6 +49,10 @@ function GameScreen:preCalcul(dt)
 end
 
 function GameScreen:update(dt)
+	if not self.music then
+		engine.playlistOutside:play()
+		self.music = true
+	end
 	self.topPath:update(dt, self.fight)
 
 	if self.fight then
@@ -58,6 +63,8 @@ function GameScreen:update(dt)
 			self.projectiles = {}
 			self.bottomPath = BottomPath:new(2, self.player, self.level)
 			self.topPath:changeLevel(self.level, self.fight, self.bottomPath)
+			engine.playlistInside:stop()
+			engine.playlistOutside:play("next")
 		end
 	else
 		self.bottomPath:update(dt, self.topPath.level:getProgress())
@@ -66,6 +73,8 @@ function GameScreen:update(dt)
 			self.boss = Boss:new(self.level)
 			self.bottomFight = BottomFight:new(1, self.player, self.boss, self.level)
 			self.topPath:changeLevel(self.level, self.fight, self.bottomFight)
+			engine.playlistOutside:stop()
+			engine.playlistInside:play("next")
 		end
 	end
 
@@ -81,6 +90,7 @@ function GameScreen:update(dt)
 				self.bottomFight.text = "OUCH"
 			else
 				self.bottomFight.text = "PARRY"
+				engine.sfx.parry:play("next")
 			end
 			v:onEnd()
 			table.insert(mustRemove, i)

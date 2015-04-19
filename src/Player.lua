@@ -24,6 +24,8 @@ function Player:initialize()
 	------
 	point = EasyLD.point:new(25,50)
 	pointChest = EasyLD.point:new(25,35)
+	pointChest.display = false
+	point.display = false
 	feet = EasyLD.point:new(20,60)
 	feet2 = EasyLD.point:new(30,60)
 	feet:attachImg(EasyLD.image:new("assets/anim8/feet.png"), "center")
@@ -43,6 +45,8 @@ function Player:initialize()
 	hand2:attachImg(EasyLD.image:new("assets/anim8/hand.png"), "center")
 	pointWrist = EasyLD.point:new(10, 35)
 	pointWrist2 = EasyLD.point:new(40, 35)
+	pointWrist2.display = false
+	pointWrist.display = false
 	areaWrist = EasyLD.area:new(hand)
 	areaWrist2 = EasyLD.area:new(hand2)
 	areaWrist:follow(pointWrist)
@@ -55,6 +59,7 @@ function Player:initialize()
 	areaArm2:follow(pointChest)
 	
 	pointGlobal = EasyLD.point:new(0,0)
+	pointGlobal.display = false
 	box = EasyLD.box:new(10,20, 30, 30)
 	box:attachImg(EasyLD.image:new("assets/anim8/chest.png"), "center")
 	tete = EasyLD.point:new(25,10)
@@ -141,7 +146,7 @@ function Player:getHit(dmg)
 		self.isDead = true
 		dmg = self.life
 	end
-
+	engine.sfx.explode:play()
 	EasyLD.flux.to(self, 0.8, {life = -dmg}, "relative")
 	EasyLD.flux.to(self.areaAnim, 0.3, {x = -10}, "relative"):ease("backout"):after(0.8, {x = self.areaAnim.x})
 	return true
@@ -153,6 +158,7 @@ function Player:restore()
 end
 
 function Player:fire(perc)
+	engine.sfx.star:play()
 	self:changeAnim8("normal")
 	self.sprite.forms[1].c = EasyLD.color:new(0, 250, 0)
 	table.insert(engine.screen.projectiles, Projectile:new(self.sprite.x + 10, self.sprite.y + self.h/2, 1, perc/100*self.dmg, perc))
