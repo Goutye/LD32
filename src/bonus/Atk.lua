@@ -16,6 +16,7 @@ end
 function Atk:get(level)
 	if not self.isGet then
 		level.text = "CASTING"
+		engine.sfx.attack:play()
 		level:startAtk()
 		level.bonus[#level.bonus]:reset()
 		for i = 1, #level.bonus - 1 do

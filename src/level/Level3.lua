@@ -5,6 +5,8 @@ local Level = class('Level', ILevel)
 
 local bNextDOWN = require 'bonus.NextDOWN'
 local bNextUP = require 'bonus.NextUP'
+local bKey = require 'bonus.Key'
+local bDeath = require 'bonus.Death'
 
 function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
@@ -15,6 +17,8 @@ function Level:initialize(time, hMax, player, upDown)
 	self.slowStart = 3
 	self.minPercent = 80
 	self.bonus = {}
+	self.key = 0
+	self.maxKey = 1
 	-----------------------------------
 
 
@@ -40,10 +44,12 @@ function Level:initialize(time, hMax, player, upDown)
 				dist2 = math.random(0, hMax)
 			end
 
-			if i == 7 and upDown then
+			if i == 7 then
 				table.insert(self.bonus, bNextUP:new(i * self.step + self.xStart, dist2))
+				table.insert(self.bonus, bKey:new(i * self.step + self.xStart, dist))
 			end
-			if i == 4 and upDown then
+			if i == 4 then
+				table.insert(self.bonus, bDeath:new(i * self.step + self.xStart, dist2))
 				table.insert(self.bonus, bNextDOWN:new(i * self.step + self.xStart, dist))
 			end
 

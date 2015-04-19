@@ -35,7 +35,7 @@ end
 function TopPath:loadLevel()
 	Level = require 'level.Level4'
 	table.insert(self.listLevelFight, Level)
-	for i = 0, 3 do
+	for i = 3, 3 do
 		Level = require("level.Level" .. i)
 		table.insert(self.listLevelPath, Level)
 	end
@@ -114,7 +114,14 @@ end
 
 function TopPath:nextLevel()
 	EasyLD.timer.cancel(self.timerColor)
-	if self.percent < self.percentMin then
+	if self.percent < self.percentMin or (self.level.key or 0) < (self.level.maxKey or 0) then
+		if (self.level.key or 0) < (self.level.maxKey or 0) then
+			self.text = "KEY!"
+			self.percent = 0
+			self:updateColor()
+			self.timerColor2 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 2)
+			self.timerText = EasyLD.timer.after(1.5, TopPath.displayText, self, 2)
+		end
 		self.level:goBack()
 		self.bottomPath:goBack()
 		self.timer = nil
@@ -161,6 +168,10 @@ function TopPath:drawUI()
 		end
 	end
 	font:print(text, size, self.boxPercent, "center", "center", self.boxPercent.c)
+
+	local key = self.level.key or 0
+	local maxKey = self.level.maxKey or 0
+	font:print(key.."/"..maxKey, 40, EasyLD.box:new(WINDOW_WIDTH-200, 5, 195, 50), "right","center", self.boxPercent.c)
 end
 
 function TopPath:updateColor()

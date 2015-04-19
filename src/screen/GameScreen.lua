@@ -88,6 +88,9 @@ function GameScreen:update(dt)
 			local wasHit = self.player:getHit(v.dmg)
 			if wasHit then
 				self.bottomFight.text = "OUCH"
+				if self.player.isDead then
+					self.level = self.level - 1
+				end
 			else
 				self.bottomFight.text = "PARRY"
 				engine.sfx.parry:play("next")

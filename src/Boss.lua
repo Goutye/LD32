@@ -120,9 +120,10 @@ function Boss:translate(dx, dy, mode)
 end
 
 function Boss:getHit(dmg)
-	if self.life - dmg < 0 then
+	if self.life - dmg <= 0 then
 		self.isDead = true
 		engine.sfx.bossDead:play()
+		engine.sfx.KO:play()
 		dmg = self.life
 	end
 	EasyLD.flux.to(self, 0.8, {life = -dmg}, "relative")

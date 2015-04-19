@@ -6,7 +6,8 @@ local Fire = class('Fire', IBonus)
 function Fire:initialize(x, y)
 	self.area = EasyLD.area:new(EasyLD.box:new(0, 0, 80, 30, EasyLD.color:new(150,155,0)))
 	self.area:moveTo(x, y)
-	self.isGet = false
+	self.isGet = true
+	self.area.display = false
 end
 
 function Fire:update(dt)

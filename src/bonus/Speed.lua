@@ -18,6 +18,7 @@ end
 function Speed:get(level)
 	if not self.isGet then
 		level.text = "SPEED"
+		engine.sfx.speed:play()
 		level.slow = level.slow / 2
 		self.isGet = true
 		self.area.display = false

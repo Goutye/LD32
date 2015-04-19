@@ -16,6 +16,12 @@ function Engine:initialize(screen)
 	s.parry = EasyLD.music:new("assets/sfx/parry", true)
 	s.pickup = EasyLD.music:new("assets/sfx/pickup", true)
 	s.star = EasyLD.music:new("assets/sfx/star", true)
+	s.speed = EasyLD.music:new("assets/sfx/speed.wav", true)
+	s.slow = EasyLD.music:new("assets/sfx/slow.wav", true)
+	s.attack = EasyLD.music:new("assets/sfx/attack.wav", true)
+	s.defense = EasyLD.music:new("assets/sfx/defense.wav", true)
+	s.youaredead = EasyLD.music:new("assets/sfx/youaredead.wav", true)
+	s.KO = EasyLD.music:new("assets/sfx/KO.wav", true)
 
 	self.sfx = s
 

@@ -16,6 +16,7 @@ end
 function Def:get(level)
 	if not self.isGet then
 		level.text = "DEFENSE"
+		engine.sfx.defense:play()
 		level:def()
 		for i = 1, #level.bonus do
 			level.bonus[i]:hide()

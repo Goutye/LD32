@@ -32,6 +32,8 @@ end
 
 function BottomFight:onEnd()
 	self.isEnd = true
+	self.boss:reset()
+	self.player:restore()
 	self.boss:stop()
 end
 
@@ -41,8 +43,7 @@ function BottomFight:update(dt)
 		self.timer = EasyLD.timer.after(0.4, self.onEnd, self)
 	elseif self.player.isDead then
 		self.text = "YOU DIED"
-		self.boss:reset()
-		self.player:restore()
+		self.timer = EasyLD.timer.after(0.4, self.onEnd, self)
 		--GO BACK => UI YOU DIED, TRY AGAIN
 	end
 end

@@ -12,7 +12,7 @@ function Player:initialize()
 	c.r = 30
 	self.area = EasyLD.area:new(c)
 
-	self.maxLife = 50
+	self.maxLife = 10
 	self.life = self.maxLife
 	self.boxMaxLife = EasyLD.box:new(0, 0, 200, 30, EasyLD.color:new(255,255,255), "line")
 	self.boxLife = EasyLD.box:new(5, 5, 190, 20, EasyLD.color:new(0,0,0,120), "fill")
@@ -142,9 +142,10 @@ function Player:getHit(dmg)
 		return false
 	end
 
-	if self.life - dmg < 0 then
+	if self.life - dmg <= 0 then
 		self.isDead = true
 		dmg = self.life
+		engine.sfx.youaredead:play()
 	end
 	engine.sfx.explode:play()
 	EasyLD.flux.to(self, 0.8, {life = -dmg}, "relative")
