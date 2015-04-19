@@ -6,6 +6,7 @@ ezld = require 'EasyLD'
 
 local Engine = require 'Engine'
 local GameScreen = require 'screen.GameScreen'
+local TitleScreen = require 'screen.TitleScreen'
 
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
@@ -14,7 +15,7 @@ engine = nil
 
 function EasyLD:load()
 	EasyLD.window:resize(WINDOW_WIDTH, WINDOW_HEIGHT)
-	engine = Engine:new(GameScreen:new())
+	engine = Engine:new(TitleScreen:new())
 end
 
 function EasyLD:preCalcul(dt)

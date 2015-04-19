@@ -5,14 +5,15 @@ local Projectile = require 'Projectile'
 
 function Player:initialize()
 	self.h = 50
-	local c = EasyLD.circle:new(-100, 0, 10, EasyLD.color:new(0,100,0))
+	local c = EasyLD.circle:new(-100, 0, 10, EasyLD.color:new(0,150,0))
 	self.form = EasyLD.area:new(c)
+	c:attachImg(EasyLD.image:new("assets/anim8/head.png"), "center")
 	self.sprite = EasyLD.area:new(EasyLD.box:new(0,0,self.h,50, EasyLD.color:new(0,0,200)))
 	c = c:copy()
 	c.r = 30
 	self.area = EasyLD.area:new(c)
 
-	self.maxLife = 10
+	self.maxLife = 15
 	self.life = self.maxLife
 	self.boxMaxLife = EasyLD.box:new(0, 0, 200, 30, EasyLD.color:new(255,255,255), "line")
 	self.boxLife = EasyLD.box:new(5, 5, 190, 20, EasyLD.color:new(0,0,0,120), "fill")
@@ -162,7 +163,56 @@ function Player:fire(perc)
 	engine.sfx.star:play()
 	self:changeAnim8("normal")
 	self.sprite.forms[1].c = EasyLD.color:new(0, 250, 0)
-	table.insert(engine.screen.projectiles, Projectile:new(self.sprite.x + 10, self.sprite.y + self.h/2, 1, perc/100*self.dmg, perc))
+	table.insert(engine.screen.projectiles, Projectile:new(self.sprite.x + 30, self.sprite.y + self.h/2, 1, perc/100*self.dmg, perc))
+end
+
+function Player:changeCursor(i)
+	if self.timerCursor ~= nil then
+		EasyLD.timer.cancel(EasyLD.timerCursor)
+		EasyLD.timerCursor = nil
+	end
+	if self.tweenTimer3 ~= nil then
+		self.tweenTimer3:stop()
+	end
+
+	if i == 1 then
+		local c = EasyLD.circle:new(0,0, 30, EasyLD.color:new(0,150,0))
+		self.areaSeg = EasyLD.area:new(c)
+		self.aera = a
+	elseif i == 2 then
+		local c = EasyLD.circle:new(0,0, 30, EasyLD.color:new(0,150,0))
+		self.areaSeg = EasyLD.area:new(c)
+		self.aera = a
+		self:tween2()
+	elseif i == 3 then
+		local p = EasyLD.circle:new(0, 0, 2, EasyLD.color:new(0,150,0))
+		local a = EasyLD.area:new(p)
+		local seg = EasyLD.box:new(-70, -4, 140, 8, EasyLD.color:new(0,150,0))
+		self.areaSeg = EasyLD.area:new(seg)
+		self.areaSeg:follow(p)
+		a:attach(self.areaSeg)
+		self.timerCursor = EasyLD.timer.every(0.02, self.areaSeg.rotate, self.areaSeg, math.pi/256)
+		self.area = a
+	elseif i == 4 then
+		local p = EasyLD.point:new(0, 0, 2, EasyLD.color:new(0,150,0))
+		p.display = false
+		p.checkCollide = false
+		local a = EasyLD.area:new(p)
+		local seg = EasyLD.box:new(0, 50, 100, 50, EasyLD.color:new(0,150,0))
+		self.areaSeg = EasyLD.area:new(seg)
+		self.areaSeg:follow(p)
+		a:attach(self.areaSeg)
+		self.area = a
+		self:tween3()
+	end
+end
+
+function Player:tween3()
+	self.tweenTimer3 = EasyLD.flux.to(self.areaSeg, 1.5, {y = -100}, "relative"):ease("quadin"):after(1.5, {y = 100}, "relative"):ease("quadin"):oncomplete(function() self:tween3() end)
+end
+
+function Player:tween2()
+	self.tweenTimer3 = EasyLD.flux.to(self.areaSeg.forms[1], 1.5, {r = 10}):ease("quadinout"):after(1.5, {r = 50}):ease("quadinout"):oncomplete(function () self:tween2() end) 
 end
 
 return Player

@@ -9,7 +9,7 @@ local function getPositionSegment(p1, p2, percent)
 	return p1.x + x, p1.y + a * x
 end
 
-function BottomPath:initialize(nbSteps, player)
+function BottomPath:initialize(nbSteps, player, level)
 	self.steps = {}
 	self.stepsCirc = {}
 	self.h = WINDOW_HEIGHT / 4
@@ -17,6 +17,7 @@ function BottomPath:initialize(nbSteps, player)
 	self.area = nil
 	self.background = EasyLD.box:new(0, self.h * 3, WINDOW_WIDTH, self.h, EasyLD.color:new(0,0,0), "fill")
 
+	self.level = level
 	self.current = 1 --step
 	self.step = WINDOW_WIDTH * 3 / 4 / 2
 
@@ -33,18 +34,27 @@ function BottomPath:initialize(nbSteps, player)
 
 	self.isEnd = false
 
-	self:generate()
+	self["generate"..level](self)
 
 	self.tileset = EasyLD.tileset:new("assets/tilesets/tileset.png", 32, 32)
 	self.map = EasyLD.map:new("assets/maps/mapoutside.map", self.tileset)
 	self.mapDec = EasyLD.point:new(0,0)
 	self.mapBegin = EasyLD.point:new(0,0)
 	self.tower = EasyLD.image:new("assets/tilesets/tower.png")
-	self.boxTower = EasyLD.box:new(WINDOW_WIDTH - 128, self.h*3, 128, self.h)
+	self.boxTower = EasyLD.box:new(WINDOW_WIDTH -160, self.h*3, 128, self.h)
 	self.boxTower:attachImg(self.tower)
+	self.boxTower2 = self.boxTower:copy()
+	self.boxTower2:translate(80,20)
+	self.boxTower2:attachImg(self.tower)
+	self.boxTower3 = self.boxTower2:copy()
+	self.boxTower3:translate(10,-30)
+	self.boxTower3:attachImg(self.tower)
+	self.boxTower4 = self.boxTower:copy()
+	self.boxTower4:translate(10,-30)
+	self.boxTower4:attachImg(self.tower)
 end
 
-function BottomPath:generate()
+function BottomPath:generate1()
 	local img = EasyLD.image:new("assets/tilesets/circle.png")
 	local bLife = EasyLD.image:new("assets/tilesets/lifeUp.png")
 	local bBoost = EasyLD.image:new("assets/tilesets/boost.png")
@@ -65,7 +75,7 @@ function BottomPath:generate()
 	local yPoint = (self.h - 10) / 4
 
 	for i = 2, self.nbSteps do
-		if i == 3 then
+		if i == 7 then
 			local p = p2
 			local r1,r2 = math.random(-1,1), math.random(-1,1)
 			while r1 == r2 do r2 = math.random(-1,1) end
@@ -79,15 +89,17 @@ function BottomPath:generate()
 			self.areaSeg:attach(EasyLD.segment:new(p, p1))
 			self.areaSeg:attach(EasyLD.segment:new(p, p2))
 			self.area:attach(circ)
-		elseif i == 4 then
+		elseif i == 8 then
 			local p = p2
 			p2 = EasyLD.point:new(xPoint, math.random(-1,1) * yPoint  + yPos)
 			circ1 = EasyLD.circle:new(p1.x, p1.y, 5, EasyLD.color:new(100,0,0))
 			circ2 = EasyLD.circle:new(p.x, p.y, 5, EasyLD.color:new(100,0,0))
-			circ1:attachImg(bLife, "center")
-			circ2:attachImg(bBoost, "center")
-			circ1.bLife = 10
-			circ2.bBoost = 2
+			circ1:attachImg(img, "center")
+			circ2:attachImg(img, "center")
+			--circ1:attachImg(bLife, "center")
+			--circ2:attachImg(bBoost, "center")
+			--circ1.bLife = 10
+			--circ2.bBoost = 2
 			table.insert(self.steps, {p2})
 			table.insert(self.stepsCirc, {circ1, circ2})
 			self.areaSeg:attach(EasyLD.segment:new(p1, p2))
@@ -115,6 +127,14 @@ function BottomPath:generate()
 	self.area = EasyLD.area:new(self.area)
 	self.area:attach(self.areaSeg)
 	--self.area = self.areaSeg
+end
+
+function BottomPath:generate2()
+	self:generate1()
+end
+
+function BottomPath:generate3()
+	self:generate1()
 end
 
 function BottomPath:update(dt, progress)
@@ -194,7 +214,16 @@ function BottomPath:draw()
 	self.map:draw(math.floor(self.mapDec.x), self.mapDec.y + self.h * 3, 30, 5, self.mapBegin.x, self.mapBegin.y)
 	self.areaSeg:draw()
 	self.areaCirc:draw("reverse")
+	if self.level > 3 then
+		self.boxTower4:draw()
+	end
+	if self.level > 2 then
+		self.boxTower3:draw()
+	end
 	self.boxTower:draw()
+	if self.level > 1 then
+		self.boxTower2:draw()
+	end
 	self.player.form:draw()
 end
 

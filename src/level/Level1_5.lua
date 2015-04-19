@@ -7,11 +7,13 @@ local bNextDOWN = require 'bonus.NextDOWN'
 local bNextUP = require 'bonus.NextUP'
 local bKey = require 'bonus.Key'
 local bDeath = require 'bonus.Death'
+local bSpeed = require 'bonus.Speed'
+local bSlow = require 'bonus.Slow'
 
 function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = 10 - (time-1)
+	self.maxTime = 8 - (time-1)
 	self.player = player
 	self.slow = 1
 	self.slowStart = 3
@@ -19,35 +21,37 @@ function Level:initialize(time, hMax, player, upDown)
 	self.bonus = {}
 	self.key = 0
 	self.maxKey = 0
+	self.maxOut = 3
+	self.num = 5
 	-----------------------------------
 
 
-	local point = EasyLD.point:new(self.xStart,10)
+	local point = EasyLD.point:new(self.xStart, hMax/2)
 	self.startPoint = point
 	self.area = EasyLD.area:new(point)
 
 	self.step = 300
 
-	local seg = EasyLD.segment:new(point:copy(), EasyLD.point:new(self.step + self.xStart, math.random(0, hMax)))
+	local seg = EasyLD.segment:new(point:copy(), EasyLD.point:new(self.step + self.xStart, hMax/2))
 	self.area:attach(seg)
 	self.length = self.length + self.step
 
 	for i = 2, 10 do
 		if i == 4 or i == 7 then
 			local p = seg.p2
-			local dist = math.random(0, hMax)
+			local dist = math.random(30, hMax-30)
 			local seg1 = EasyLD.segment:new(p:copy(), EasyLD.point:new(i * self.step + self.xStart, dist))
 			self.area:attach(seg1)
 
-			local dist2 = math.random(0, hMax)
+			local dist2 = math.random(30, hMax-30)
 			while math.abs(dist - dist2) < hMax/4 do
-				dist2 = math.random(0, hMax)
+				dist2 = math.random(30, hMax-30)
 			end
 
-			if i == 7 then
+			if i == 7 and upDown then
 				table.insert(self.bonus, bNextUP:new(i * self.step + self.xStart, dist2))
 			end
-			if i == 4 then
+			if i == 4 and upDown then
 				table.insert(self.bonus, bNextDOWN:new(i * self.step + self.xStart, dist))
 			end
 
@@ -57,7 +61,7 @@ function Level:initialize(time, hMax, player, upDown)
 			seg = t[math.random(1,2)]
 			self.length = self.length + self.step
 		else
-			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(0, hMax)))
+			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(30, hMax-30)))
 			self.area:attach(seg)
 			self.length = self.length + self.step
 		end

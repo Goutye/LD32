@@ -134,7 +134,7 @@ function tween:after(...)
 	if select("#", ...) == 2 then
 		t = tween.new(self.obj, ...)
 	else
-		t = tween.new(...)
+		t = tween.new(self.obj, ...)
 	end
 	t.parent = self.parent
 	self:oncomplete(function() flux.add(self.parent, t) end)

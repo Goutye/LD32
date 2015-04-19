@@ -14,7 +14,7 @@ function ILevel:update(dt)
 	
 	if not self.isEnd and not self.levelBack then
 		self.currentTime = self.currentTime + dt
-
+		local areaP = self.player.areaSeg or self.player.area
 		local dx = dt / self.maxTime * self.length / self.slow
 
 		self.area:translate(-dx, 0)
@@ -22,7 +22,7 @@ function ILevel:update(dt)
 			self.bonusArea:translate(-dx, 0)
 		end
 
-		if self.player.area:collide(self.lastPoint) and self.percent >= self.minPercent then
+		if areaP:collide(self.lastPoint) and self.percent >= self.minPercent then
 			self.gotEnd = true
 		end
 
@@ -31,13 +31,15 @@ function ILevel:update(dt)
 		end
 
 		if self.isStart then
-			if self:collide(self.player.area) then
+			if self:collide(areaP) or self.invicible then
 				self.isOut = false
 			else
 				EasyLD.camera:shake({x = 5, y = 5}, dt)
 				self.timeOut = self.timeOut + dt
 				if not self.isOut then
 					self.isOut = true
+					self.invicible = true
+					self.timerInv = EasyLD.timer.after(0.5, self.stopInvincible, self)
 					self.nbOut = self.nbOut + 1
 
 					if self.isDef then
@@ -62,6 +64,10 @@ function ILevel:update(dt)
 	end
 end
 
+function ILevel:stopInvincible()
+	self.invicible = false
+end
+
 function ILevel:draw()
 	self.area:draw()
 	if self.bonusArea ~= nil then
@@ -73,15 +79,17 @@ end
 
 function ILevel:goBack()
 	self.levelBack = true
-	EasyLD.flux.to(self.area, self.timeEase/1.33, {x = self.xStart}):ease(self.easeType)
-	EasyLD.flux.to(self, self.timeEase/1.33, {prevPercent = 0}):ease(self.easeType)
+	local coeff = (WINDOW_WIDTH - self.area.x) / self.length * self.timeEase / 2 + 0.01
+	EasyLD.flux.to(self.area, coeff, {x = self.xStart}):ease(self.easeType)
+	EasyLD.flux.to(self, coeff, {prevPercent = 0}):ease(self.easeType)
 	if self.bonusArea ~= nil then
-		EasyLD.flux.to(self.bonusArea, self.timeEase/1.33, {x = self.xStart}):ease(self.easeType)
+		EasyLD.flux.to(self.bonusArea, coeff, {x = self.xStart}):ease(self.easeType)
 	end
 	self.isStart = false
 	self.currentTime = 0
 	self.timeOut = 0
 	self.nbOut = 0
+	self.key = 0
 	self.gotEnd = false
 	self.isDef = false
 	self.slow = 1
@@ -89,7 +97,8 @@ function ILevel:goBack()
 		self.bonus[#self.bonus]:hide()
 	end
 	self.isEnd = false
-	self.timer = EasyLD.timer.after(self.timeEase/1.33, self.start, self)
+	self.timer3 = EasyLD.timer.after(coeff * 2, self.start, self)
+	self.timer2 = EasyLD.timer.after(coeff, self.endGoBack, self)
 	for i, v in ipairs(self.bonus) do
 		v:reset()
 	end
@@ -99,6 +108,10 @@ end
 
 function ILevel:start()
 	self.isStart = true
+	self.levelBack = false
+end
+
+function ILevel:endGoBack()
 	self.levelBack = false
 end
 
@@ -131,7 +144,12 @@ function ILevel:onEnd(callback, arg)
 	EasyLD.flux.to(self.area, self.timeEaseEnd, {x = -WINDOW_WIDTH}, "relative"):ease(self.easeTypeEnd)
 	self.currentTime = 0
 	EasyLD.flux.to(self, self.timeEaseEnd, {prevPercent = 100}):ease(self.easeType)
-	self.timer = EasyLD.timer.after(self.timeEaseEnd, callback, arg)
+	self.timer2 = EasyLD.timer.after(self.timeEaseEnd, callback, arg)
+	if self.timer ~= nil and not self.levelBack then
+		for i,v in ipairs(self.timer) do
+			EasyLD.timer.cancel(v)
+		end
+	end
 end
 
 function ILevel:collide(area)

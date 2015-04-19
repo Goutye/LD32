@@ -22,6 +22,7 @@ function Engine:initialize(screen)
 	s.defense = EasyLD.music:new("assets/sfx/defense.wav", true)
 	s.youaredead = EasyLD.music:new("assets/sfx/youaredead.wav", true)
 	s.KO = EasyLD.music:new("assets/sfx/KO.wav", true)
+	s.bossHit = EasyLD.music:new("assets/sfx/bossHit", true)
 
 	self.sfx = s
 
@@ -35,6 +36,10 @@ function Engine:initialize(screen)
 	for i,v in ipairs(m) do
 		v.looping = true
 	end
+
+	self.musicTitle = m[4]
+	m[4]:play()
+	
 	for i = 1, #m do
 		local choice = math.random(1,#m)
 		while mBool[choice] do
@@ -85,6 +90,10 @@ end
 
 function Engine:draw()
 	self.screen:draw()
+end
+
+function Engine:setNextScreen(screen)
+	self.nextScreen = screen
 end
 
 return Engine

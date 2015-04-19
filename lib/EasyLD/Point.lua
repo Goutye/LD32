@@ -25,6 +25,7 @@ function Point:initialize(x, y, color, display)
 	if display == nil then display = true end
 	self.display = display
 	self.angle = 0
+	self.checkCollide = true
 end
 
 function Point.__add(v1, v2)
@@ -126,18 +127,22 @@ end
 
 --EasyLD.collide functions
 function Point:collide(area)
+	if not self.checkCollide then return false end
 	return area:collidePoint(self)
 end
 
 function Point:collideArea(area)
+	if not self.checkCollide then return false end
 	return area:collidePoint(self)
 end
 
 function Point:collidePolygon(poly)
+	if not self.checkCollide then return false end
 	return EasyLD.collide:Polygon_point(poly, self)
 end
 
 function Point:collideBox(b)
+	if not self.checkCollide then return false end
 	if b.angle == 0 then
 		return EasyLD.collide:AABB_point(b, self)
 	else
@@ -146,14 +151,17 @@ function Point:collideBox(b)
 end
 
 function Point:collideCircle(c)
+	if not self.checkCollide then return false end
 	return EasyLD.collide:Circle_point(c, self)
 end
 
 function Point:collideSegment(s)
+	if not self.checkCollide then return false end
 	return EasyLD.collide:Segment_point(s, self)
 end
 
 function Point:collidePoint(p)
+	if not self.checkCollide then return false end
 	return p.x == self.x and p.y == self.y
 end
 

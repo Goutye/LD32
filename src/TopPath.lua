@@ -27,6 +27,8 @@ function TopPath:initialize(player, bottomPath)
 	self.timer = nil
 	self.bottomPath = bottomPath
 
+	self.intraLevel = 0
+
 	--UI
 	self.boxPercent = EasyLD.box:new(0, 0, WINDOW_WIDTH, self.h, EasyLD.color:new(20, 20, 0))
 	self.percent = 100
@@ -35,9 +37,13 @@ end
 function TopPath:loadLevel()
 	Level = require 'level.Level4'
 	table.insert(self.listLevelFight, Level)
-	for i = 3, 3 do
-		Level = require("level.Level" .. i)
-		table.insert(self.listLevelPath, Level)
+	for j = 1, 3 do
+		self.listLevelPath[j] = {}
+		for i = 1, 8 do
+			Level = require("level.Level" .. j .. "_" .. i)
+			--Level = require("level.Level3_4")
+			table.insert(self.listLevelPath[j], Level)
+		end
 	end
 end
 
@@ -48,10 +54,16 @@ function TopPath:changeLevel(i, fight, bottom)
 		self.listLevel = self.listLevelFight
 	else
 		self.percentMin = 50
-		self.listLevel = self.listLevelPath
+		self.listLevel = self.listLevelPath[i]
 	end
+	self.intraLevel = 0
 	self.numLevel = i
 	self.bottomPath = bottom
+
+	if i > 1 then
+		self.player:changeCursor(i)
+	end
+
 	self:generateNewLevel()
 end
 
@@ -114,9 +126,15 @@ end
 
 function TopPath:nextLevel()
 	EasyLD.timer.cancel(self.timerColor)
-	if self.percent < self.percentMin or (self.level.key or 0) < (self.level.maxKey or 0) then
+	if self.percent < self.percentMin or (self.level.key or 0) < (self.level.maxKey or 0) or (self.level.nbOut > self.level.maxOut and self.level.maxOut > -1) then
 		if (self.level.key or 0) < (self.level.maxKey or 0) then
 			self.text = "KEY!"
+			self.percent = 0
+			self:updateColor()
+			self.timerColor2 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 2)
+			self.timerText = EasyLD.timer.after(1.5, TopPath.displayText, self, 2)
+		elseif self.level.nbOut > self.level.maxOut then
+			self.text = "> ".. self.level.maxOut .." OUT"
 			self.percent = 0
 			self:updateColor()
 			self.timerColor2 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 2)
@@ -134,10 +152,13 @@ end
 function TopPath:generateNewLevel()
 	self.bottomPath:goNext(self.level.next)
 	if self.bottomPath.current ~= nil then
+		self.intraLevel = self.intraLevel + 1
 		if self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and #self.bottomPath.steps[self.bottomPath.current + 2] > 1 then
-			self.level = self.listLevel[math.random(1, #self.listLevel)]:new(self.numLevel, self.h, self.player, true, bottomPath)
+			self.level = self.listLevel[self.intraLevel]:new(self.numLevel, self.h, self.player, true, nil)
 		else
-			self.level = self.listLevel[math.random(1, #self.listLevel)]:new(self.numLevel, self.h, self.player, nil, bottomPath)
+			print(self.listLevel, self.intraLevel, self.numLevel)
+			print(self.listLevel[1], #self.listLevel)
+			self.level = self.listLevel[self.intraLevel]:new(self.numLevel, self.h, self.player, nil, nil)
 		end
 	else
 		self.level = self.listLevel[math.random(1, #self.listLevel)]:new(self.numLevel, self.h, self.player, nil, bottomPath)
@@ -172,6 +193,12 @@ function TopPath:drawUI()
 	local key = self.level.key or 0
 	local maxKey = self.level.maxKey or 0
 	font:print(key.."/"..maxKey, 40, EasyLD.box:new(WINDOW_WIDTH-200, 5, 195, 50), "right","center", self.boxPercent.c)
+	font:print("Level: " .. self.numLevel ..".".. self.level.num, 40, EasyLD.box:new(5, 5, 195, 50), "left","center", self.boxPercent.c)
+
+	local text = ""
+	for i = 1, self.level.nbOut do text = text .. "X" end
+	for i = self.level.nbOut+1, self.level.maxOut do text = text .. "O" end
+	font:print(text, 40, EasyLD.box:new(0, 0, WINDOW_WIDTH, 50), "center","center", self.boxPercent.c)
 end
 
 function TopPath:updateColor()

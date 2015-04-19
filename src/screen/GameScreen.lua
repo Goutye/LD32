@@ -12,7 +12,7 @@ local Boss = require 'Boss'
 function GameScreen:initialize()
 	---
 	self.player = Player:new()
-	self.bottomPath = BottomPath:new(2, self.player)
+	self.bottomPath = BottomPath:new(3, self.player, 1)
 	self.topPath = TopPath:new(self.player, self.bottomPath)
 	self.projectiles = {}
 
@@ -61,13 +61,13 @@ function GameScreen:update(dt)
 			self.level = self.level + 1
 			self.fight = false
 			self.projectiles = {}
-			self.bottomPath = BottomPath:new(2, self.player, self.level)
+			self.bottomPath = BottomPath:new(9, self.player, self.level)
 			self.topPath:changeLevel(self.level, self.fight, self.bottomPath)
 			engine.playlistInside:stop()
 			engine.playlistOutside:play("next")
 		end
 	else
-		self.bottomPath:update(dt, self.topPath.level:getProgress())
+		self.bottomPath:update(dt, self.topPath.level:getProgress(), self.level)
 		if self.bottomPath.isEnd then
 			self.fight = true
 			self.boss = Boss:new(self.level)

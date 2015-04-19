@@ -17,6 +17,8 @@ function Level:initialize(time, hMax, player, upDown, bottom)
 	self.minPercent = 80
 	self.bonus = {}
 	self.bottom = bottom
+	self.num = "BOSS"
+	self.maxOut = -1
 	-----------------------------------
 
 
