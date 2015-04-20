@@ -9,10 +9,12 @@ local BottomFight = require 'BottomFight'
 local Player = require 'Player'
 local Boss = require 'Boss'
 
+local EndScreen = require 'screen.EndScreen'
+
 function GameScreen:initialize()
 	---
 	self.player = Player:new()
-	self.bottomPath = BottomPath:new(1, self.player, 1)
+	self.bottomPath = BottomPath:new(2, self.player, 1)
 	self.topPath = TopPath:new(self.player, self.bottomPath)
 	self.projectiles = {}
 
@@ -21,17 +23,21 @@ function GameScreen:initialize()
 	font:load(16, EasyLD.color:new(255,255,255))
 
 	self.fight = false
-	self.level = 1
-	self.topPath:changeLevel(1, self.fight, self.bottomPath)
+	self.level = 4
+	self.topPath:changeLevel(self.level, self.fight, self.bottomPath)
 
 	self.lastDt = 1
 	self.slower = false
 	self.music = false
+	self.totalTime = 0
 end
 
 function GameScreen:preCalcul(dt)
+	self.totalTime = self.totalTime + dt
 	if self.proj ~= nil then
-		if self.proj.dmg > self.boss.life and not self.boss.isDead then
+		if self.proj.dmg > self.boss.life and not self.boss.isDead and not self.proj.idDead then
+			self.prevBossLife = self.boss.life
+			print(self.proj.dmg, self.boss.life)
 			self.slower = true
 			dt = dt * math.min(2/10 + math.abs(self.boss.areaAnim.x - self.proj.sprite.x)/(WINDOW_WIDTH/4)*8/10, 1)
 		elseif self.boss.isDead then
@@ -49,6 +55,8 @@ function GameScreen:preCalcul(dt)
 end
 
 function GameScreen:update(dt)
+	
+
 	if not self.music then
 		engine.playlistOutside:play()
 		self.music = true
@@ -59,6 +67,10 @@ function GameScreen:update(dt)
 		self.bottomFight:update(dt)
 		if self.bottomFight.isEnd then
 			self.level = self.level + 1
+			if self.level > 4 then
+				engine:setNextScreen(EndScreen:new(self))
+				return
+			end
 			self.fight = false
 			self.projectiles = {}
 			self.bottomPath = BottomPath:new(9, self.player, self.level)
@@ -132,10 +144,15 @@ function GameScreen:draw()
 end
 
 function GameScreen:onQuit()
+	engine.playlistOutside:stop()
+	engine.playlistInside:stop()
 end
 
 function GameScreen:backToNormal()
 	self.proj = nil
+	for i = 1, #self.projectiles do
+		table.remove(self.projectiles, i)
+	end
 	print("ok")
 end
 

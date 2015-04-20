@@ -19,7 +19,7 @@ function Level:initialize(time, hMax, player, upDown)
 	self.bonus = {}
 	self.key = 0
 	self.maxKey = 0
-	self.maxOut = 3
+	self.maxOut = 1
 	self.num = 1
 	-----------------------------------
 
@@ -35,6 +35,10 @@ function Level:initialize(time, hMax, player, upDown)
 	self.length = self.length + self.step
 
 	for i = 2, 8 do
+		if i ==2 then
+			table.insert(self.bonus, bNextUP:new(i * self.step + self.xStart, hMax/3 ))
+			table.insert(self.bonus, bNextDOWN:new(i * self.step + self.xStart, hMax/3*2 ))
+		end
 		if i % 2 == 0 then
 			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(30, hMax/3)))
 		else

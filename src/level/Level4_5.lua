@@ -11,7 +11,7 @@ local bDeath = require 'bonus.Death'
 function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = 20 - (time-1)
+	self.maxTime = 12 - (time-1)
 	self.player = player
 	self.slow = 1
 	self.slowStart = 3
@@ -35,6 +35,10 @@ function Level:initialize(time, hMax, player, upDown)
 	self.length = self.length + self.step
 
 	for i = 2, 8 do
+		if i == 5 and upDown then
+			table.insert(self.bonus, bNextDOWN:new(i * self.step + self.xStart, hMax/3 ))
+			table.insert(self.bonus, bNextUP:new(i * self.step + self.xStart, hMax/3*2 ))
+		end
 		if i % 2 == 0 then
 			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(30, hMax/3)))
 		else

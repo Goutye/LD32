@@ -99,10 +99,10 @@ function BottomPath:generate1(id)
 			circ2 = EasyLD.circle:new(p.x, p.y, 5, EasyLD.color:new(100,0,0))
 			circ1:attachImg(img, "center")
 			circ2:attachImg(img, "center")
-			--circ1:attachImg(bLife, "center")
-			--circ2:attachImg(bBoost, "center")
-			--circ1.bLife = 10
-			--circ2.bBoost = 2
+			circ1:attachImg(bLife, "center")
+			circ2:attachImg(bBoost, "center")
+			circ1.bLife = 10
+			circ2.bBoost = 2
 			table.insert(self.steps, {p2})
 			table.insert(self.stepsCirc, {circ1, circ2})
 			self.areaSeg:attach(EasyLD.segment:new(p1, p2))

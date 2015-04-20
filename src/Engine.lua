@@ -72,6 +72,8 @@ function Engine:initialize(screen)
 	end
 
 	self.playlistOutside = p
+
+	self.musicEnd = EasyLD.music:new("assets/music/end.ogg")
 end
 
 function Engine:preCalcul(dt)

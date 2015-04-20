@@ -8,14 +8,14 @@ function Boss:initialize(level)
 	local c = EasyLD.box:new(0,0, 40, self.h, EasyLD.color:new(200,0,0))
 	self.sprite = EasyLD.area:new(c)
 
-	self.maxLife = 10 + level * 10
+	self.maxLife = 5--10 + level * 10
 	self.life = self.maxLife
 	self.boxMaxLife = EasyLD.box:new(0, 0, 200, 30, EasyLD.color:new(255,255,255), "line")
 	self.boxLife = EasyLD.box:new(5, 5, 190, 20, EasyLD.color:new(0,0,0,120), "fill")
 	self.boxMaxLife:moveTo(WINDOW_WIDTH-200, WINDOW_HEIGHT/4*3)
 	self.boxLife:moveTo(WINDOW_WIDTH-200 + 5, WINDOW_HEIGHT/4*3 + 5)
 
-	self.timeBeforeCast = 10 - (level -1)
+	self.timeBeforeCast = 12 - (level - 1) 
 
 	self.timer = EasyLD.timer.after(math.random(5, 7) + self.timeBeforeCast, self.fire, self)
 	self.timerCast = EasyLD.timer.after(self.timeBeforeCast, self.cast, self)

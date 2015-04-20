@@ -19,7 +19,7 @@ function Level:initialize(time, hMax, player, upDown)
 	self.bonus = {}
 	self.key = 0
 	self.maxKey = 0
-	self.maxOut = 2
+	self.maxOut = 1
 	self.num = 2
 	-----------------------------------
 

@@ -31,15 +31,17 @@ function ILevel:update(dt)
 		end
 
 		if self.isStart then
-			if self:collide(areaP) or self.invicible then
-				self.isOut = false
+			if self:collide(areaP) then
+				if self.isOut then
+					self.isOut = false
+					self.timerInv = EasyLD.timer.after(0.5, self.stopInvincible, self)
+					self.invicible = true
+				end
 			else
 				EasyLD.camera:shake({x = 5, y = 5}, dt)
 				self.timeOut = self.timeOut + dt
-				if not self.isOut then
+				if not self.isOut and not self.invicible then
 					self.isOut = true
-					self.invicible = true
-					self.timerInv = EasyLD.timer.after(0.5, self.stopInvincible, self)
 					self.nbOut = self.nbOut + 1
 
 					if self.isDef then

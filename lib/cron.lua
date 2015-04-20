@@ -81,7 +81,9 @@ function cron.reset()
 end
 
 function cron.cancel(id)
-	entries[id] = nil
+	if id ~= nil then
+		entries[id] = nil
+	end
 end
 
 function cron.after(time, callback, ...)

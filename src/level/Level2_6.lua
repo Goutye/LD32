@@ -13,7 +13,7 @@ local bSlow = require 'bonus.Slow'
 function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = 18 - (time-1)
+	self.maxTime = 15 - (time-1)
 	self.player = player
 	self.slow = 1
 	self.slowStart = 3
@@ -21,7 +21,7 @@ function Level:initialize(time, hMax, player, upDown)
 	self.bonus = {}
 	self.key = 0
 	self.maxKey = 2
-	self.maxOut = 3
+	self.maxOut = 1
 	self.num = 4
 	self.timer = {}
 	-----------------------------------

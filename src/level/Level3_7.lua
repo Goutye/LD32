@@ -11,7 +11,7 @@ local bDeath = require 'bonus.Death'
 function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = 20 - (time-1)
+	self.maxTime = 10 - (time-1)
 	self.player = player
 	self.slow = 1
 	self.slowStart = 3
@@ -19,7 +19,7 @@ function Level:initialize(time, hMax, player, upDown)
 	self.bonus = {}
 	self.key = 0
 	self.maxKey = 0
-	self.maxOut = 2
+	self.maxOut = 1
 	self.num = 3
 	-----------------------------------
 

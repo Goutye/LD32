@@ -23,6 +23,7 @@ function Projectile:initialize(x, y, dx, dmg, perc)
 	self.dir = EasyLD.vector:new(dx * math.cos(angle), math.sin(angle))
 	self.dmg = dmg
 	self.power = 150
+	self.isDead = false
 end
 
 function Projectile:update(dt)
@@ -44,6 +45,8 @@ function Projectile:onEnd(x, y)
 	if self.img ~= nil then
 		self.img:cancel()
 	end
+
+	self.idDead = true
 end
 
 return Projectile

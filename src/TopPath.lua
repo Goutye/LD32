@@ -29,6 +29,8 @@ function TopPath:initialize(player, bottomPath)
 
 	self.intraLevel = 0
 
+	self.nbOut = 0
+
 	--UI
 	self.boxPercent = EasyLD.box:new(0, 0, WINDOW_WIDTH, self.h, EasyLD.color:new(20, 20, 0))
 	self.percent = 100
@@ -41,7 +43,7 @@ function TopPath:loadLevel()
 		self.listLevelPath[j] = {}
 		for i = 1, 8 do
 			Level = require("level.Level" .. j .. "_" .. i)
-			--Level = require("level.Level1_8")
+			--Level = require("level.Level4_3")
 			table.insert(self.listLevelPath[j], Level)
 		end
 	end
@@ -53,12 +55,13 @@ function TopPath:changeLevel(i, fight, bottom)
 		self.percentMin = 50
 		self.listLevel = self.listLevelFight
 	else
-		self.percentMin = 50
+		self.percentMin = 80
 		self.listLevel = self.listLevelPath[i]
 	end
-	self.intraLevel = 0
+	self.intraLevel = 1
 	self.numLevel = i
 	self.bottomPath = bottom
+	self.fight = fight
 
 	if i > 1 then
 		self.player:changeCursor(i)
@@ -77,7 +80,7 @@ function TopPath:update(dt)
 	if self.level.isEnd and self.timer == nil then
 		self:updateColor()
 		self.timer = EasyLD.timer.after(1, TopPath.nextLevel, self)
-		if self.percent > self.percentMin then
+		if self.percent >= self.percentMin and (self.level.key or 0) == (self.level.maxKey or 0) and (self.level.nbOut <= self.level.maxOut or self.level.maxOut <= -1) then
 			self.timerColor = EasyLD.timer.every(0.12, TopPath.switchColor, self)
 			engine.sfx.ok:play()
 		else
@@ -133,17 +136,21 @@ function TopPath:nextLevel()
 			self:updateColor()
 			self.timerColor2 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 2)
 			self.timerText = EasyLD.timer.after(1.5, TopPath.displayText, self, 2)
-		elseif self.level.nbOut > self.level.maxOut then
+		elseif self.level.nbOut > self.level.maxOut and self.level.maxOut > -1 then
 			self.text = "> ".. self.level.maxOut .." OUT"
 			self.percent = 0
 			self:updateColor()
 			self.timerColor2 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 2)
 			self.timerText = EasyLD.timer.after(1.5, TopPath.displayText, self, 2)
 		end
+
+		self.nbOut = self.nbOut + self.level.nbOut
 		self.level:goBack()
 		self.bottomPath:goBack()
 		self.timer = nil
 	else
+		self.nbOut = self.nbOut + self.level.nbOut
+		self.intraLevel = self.intraLevel + 1
 		self.level:onEnd(TopPath.generateNewLevel, self)
 	end
 	self.currentTime = 0
@@ -151,17 +158,20 @@ end
 
 function TopPath:generateNewLevel()
 	self.bottomPath:goNext(self.level.next)
+	if self.intraLevel > 8 then
+		self.timer = nil
+		return
+	end
 	if self.bottomPath.current ~= nil then
-		self.intraLevel = self.intraLevel + 1
 		if self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and #self.bottomPath.steps[self.bottomPath.current + 2] > 1 then
-			self.level = self.listLevel[self.intraLevel]:new(self.numLevel, self.h, self.player, true, nil)
+			self.level = self.listLevel[self.intraLevel]:new(self.numLevel, self.h, self.player, true, self.intraLevel)
 		else
 			print(self.listLevel, self.intraLevel, self.numLevel)
 			print(self.listLevel[1], #self.listLevel)
-			self.level = self.listLevel[self.intraLevel]:new(self.numLevel, self.h, self.player, nil, nil)
+			self.level = self.listLevel[self.intraLevel]:new(self.numLevel, self.h, self.player, nil, self.intraLevel)
 		end
 	else
-		self.level = self.listLevel[math.random(1, #self.listLevel)]:new(self.numLevel, self.h, self.player, nil, bottomPath)
+		self.level = self.listLevel[math.random(1, #self.listLevel)]:new(self.numLevel, self.h, self.player, nil, self.intraLevel)
 	end
 	self.timer = nil
 end
@@ -192,8 +202,11 @@ function TopPath:drawUI()
 
 	local key = self.level.key or 0
 	local maxKey = self.level.maxKey or 0
-	font:print(key.."/"..maxKey, 40, EasyLD.box:new(WINDOW_WIDTH-200, 5, 195, 50), "right","center", self.boxPercent.c)
-	font:print("Level: " .. self.numLevel ..".".. (self.intraLevel or self.level.num), 40, EasyLD.box:new(5, 5, 195, 50), "left","center", self.boxPercent.c)
+	font:print("Key: " .. key.."/"..maxKey, 40, EasyLD.box:new(WINDOW_WIDTH-200, 5, 195, 50), "right","center", self.boxPercent.c)
+	
+	local name = self.intraLevel
+	if self.fight then name = self.level.num end
+	font:print("Level: " .. self.numLevel ..".".. name, 40, EasyLD.box:new(5, 5, 195, 50), "left","center", self.boxPercent.c)
 
 	local text = ""
 	for i = 1, self.level.nbOut do text = text .. "X" end

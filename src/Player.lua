@@ -167,6 +167,8 @@ function Player:fire(perc)
 end
 
 function Player:changeCursor(i)
+	self.currentCursor = i
+
 	if self.timerCursor ~= nil then
 		EasyLD.timer.cancel(EasyLD.timerCursor)
 		EasyLD.timerCursor = nil
@@ -212,7 +214,9 @@ function Player:tween3()
 end
 
 function Player:tween2()
-	self.tweenTimer3 = EasyLD.flux.to(self.area.forms[1], 2, {r = 15}):ease("quintinout"):after(2, {r = 50}):ease("quintinout"):oncomplete(function () self:tween2() end) 
+	if self.currentCursor == 2 then
+		self.tweenTimer3 = EasyLD.flux.to(self.area.forms[1], 2, {r = 15}):ease("quintinout"):after(2, {r = 50}):ease("quintinout"):oncomplete(function () self:tween2() end) 
+	end
 end
 
 return Player

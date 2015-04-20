@@ -63,10 +63,10 @@ function Level:initialize(time, hMax, player, upDown)
 				dist2 = math.random(30, hMax-30)
 			end
 
-			if upDown then
+			if upDown and i == 12 then
 				table.insert(self.bonus, bNextUP:new(i * self.step + self.xStart, dist2))
 			end
-			if upDown then
+			if upDown and i == 17 then
 				table.insert(self.bonus, bNextDOWN:new(i * self.step + self.xStart, dist))
 			end
 
@@ -82,8 +82,8 @@ function Level:initialize(time, hMax, player, upDown)
 		end
 	end
 
-	table.insert(self.bonus, bDeath:new(11 * 100 + 3 * self.step + self.xStart, hMax/2 + 50 ))
-	table.insert(self.bonus, bDeath:new(11*100+3 * self.step + self.xStart, hMax/2 - 50 ))
+	table.insert(self.bonus, bDeath:new(11 * 100 + 3 * self.step + self.xStart, hMax/2 + 55 ))
+	table.insert(self.bonus, bDeath:new(11*100+3 * self.step + self.xStart, hMax/2 - 55 ))
 
 	self.lastPoint = seg.p2
 

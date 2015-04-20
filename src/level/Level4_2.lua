@@ -30,6 +30,7 @@ function Level:initialize(time, hMax, player, upDown)
 	self.area = EasyLD.area:new(point)
 
 	self.step = 300
+	self.nbSlow = 0
 
 	local seg = EasyLD.segment:new(point:copy(), EasyLD.point:new(self.step + self.xStart, hMax/2))
 	self.area:attach(seg)
@@ -39,9 +40,11 @@ function Level:initialize(time, hMax, player, upDown)
 
 	for i = 2, 20 do
 		if i % 4 == 2 then
-			if sign < 0 then
+			if sign < 0 or self.nbSlow > 1 then
+				self.nbSlow = 0
 				table.insert(self.bonus, bSpeed:new(self.length + self.xStart, hMax/2 + hMax/3 * sign))
 			else
+				self.nbSlow = self.nbSlow + 1
 				table.insert(self.bonus, bSlow:new(self.length + self.xStart, hMax/2 + hMax/3 * sign))
 			end
 			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(self.length + self.xStart, hMax/2 + hMax/3 * sign))
