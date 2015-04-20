@@ -35,6 +35,7 @@ function Engine:initialize(screen)
 	table.insert(m, EasyLD.music:new("assets/music/5.ogg"))
 	for i,v in ipairs(m) do
 		v.looping = true
+		v:setVolume(0.5)
 	end
 
 	self.musicTitle = m[4]
@@ -61,6 +62,7 @@ function Engine:initialize(screen)
 	table.insert(m, EasyLD.music:new("assets/music/6_out.ogg"))
 	for i,v in ipairs(m) do
 		v.looping = true
+		v:setVolume(0.5)
 	end
 	for i = 1, #m do
 		local choice = math.random(1,#m)

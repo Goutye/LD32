@@ -14,7 +14,7 @@ local EndScreen = require 'screen.EndScreen'
 function GameScreen:initialize()
 	---
 	self.player = Player:new()
-	self.bottomPath = BottomPath:new(2, self.player, 1)
+	self.bottomPath = BottomPath:new(9, self.player, 1)
 	self.topPath = TopPath:new(self.player, self.bottomPath)
 	self.projectiles = {}
 

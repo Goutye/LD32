@@ -20,7 +20,7 @@ function Music:play(callback, vol)
 		callback = function () end
 	end
 	if self.sfx then
-		self.m:play(vol or 1)
+		self.m:play(vol or 0.7)
 	else
 		self.m:play(self.looping, callback)
 	end
