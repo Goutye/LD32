@@ -8,7 +8,7 @@ function Boss:initialize(level)
 	local c = EasyLD.box:new(0,0, 40, self.h, EasyLD.color:new(200,0,0))
 	self.sprite = EasyLD.area:new(c)
 
-	self.maxLife = 5--10 + level * 10
+	self.maxLife = 10 + level * 10
 	self.life = self.maxLife
 	self.boxMaxLife = EasyLD.box:new(0, 0, 200, 30, EasyLD.color:new(255,255,255), "line")
 	self.boxLife = EasyLD.box:new(5, 5, 190, 20, EasyLD.color:new(0,0,0,120), "fill")

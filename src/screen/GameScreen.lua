@@ -14,7 +14,7 @@ local EndScreen = require 'screen.EndScreen'
 function GameScreen:initialize()
 	---
 	self.player = Player:new()
-	self.bottomPath = BottomPath:new(2, self.player, 1)
+	self.bottomPath = BottomPath:new(9, self.player, 1)
 	self.topPath = TopPath:new(self.player, self.bottomPath)
 	self.projectiles = {}
 
@@ -23,7 +23,7 @@ function GameScreen:initialize()
 	font:load(16, EasyLD.color:new(255,255,255))
 
 	self.fight = false
-	self.level = 4
+	self.level = 1
 	self.topPath:changeLevel(self.level, self.fight, self.bottomPath)
 
 	self.lastDt = 1
