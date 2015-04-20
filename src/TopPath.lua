@@ -42,8 +42,8 @@ function TopPath:loadLevel()
 	for j = 1, 4 do
 		self.listLevelPath[j] = {}
 		for i = 1, 8 do
-			Level = require("level.Level" .. j .. "_" .. i)
-			--Level = require("level.Level2_7")
+			--Level = require("level.Level" .. j .. "_" .. i)
+			Level = require("level.Level2_6")
 			table.insert(self.listLevelPath[j], Level)
 		end
 	end
