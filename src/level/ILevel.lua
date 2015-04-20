@@ -26,7 +26,7 @@ function ILevel:update(dt)
 			self.gotEnd = true
 		end
 
-		if self.lastPoint.x < 10 or self.gotEnd then
+		if self.lastPoint.x < 10 or self.gotEnd or self.nbOut > self.maxOut then
 			self.isEnd = true
 		end
 

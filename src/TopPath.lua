@@ -42,8 +42,8 @@ function TopPath:loadLevel()
 	for j = 1, 4 do
 		self.listLevelPath[j] = {}
 		for i = 1, 8 do
-			--Level = require("level.Level" .. j .. "_" .. i)
-			Level = require("level.Level2_6")
+			Level = require("level.Level" .. j .. "_" .. i)
+			--Level = require("level.Level2_6")
 			table.insert(self.listLevelPath[j], Level)
 		end
 	end
@@ -139,14 +139,14 @@ end
 function TopPath:nextLevel()
 	EasyLD.timer.cancel(self.timerColor)
 	if self.percent < self.percentMin or (self.level.key or 0) < (self.level.maxKey or 0) or (self.level.nbOut > self.level.maxOut and self.level.maxOut > -1) then
-		if (self.level.key or 0) < (self.level.maxKey or 0) then
-			self.text = "KEY!"
+		if self.level.nbOut > self.level.maxOut and self.level.maxOut > -1 then
+			self.text = "> ".. self.level.maxOut .." OUT"
 			self.percent = 0
 			self:updateColor()
 			self.timerColor2 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 2)
 			self.timerText = EasyLD.timer.after(1.5, TopPath.displayText, self, 2)
-		elseif self.level.nbOut > self.level.maxOut and self.level.maxOut > -1 then
-			self.text = "> ".. self.level.maxOut .." OUT"
+		elseif (self.level.key or 0) < (self.level.maxKey or 0) then
+			self.text = "KEY!"
 			self.percent = 0
 			self:updateColor()
 			self.timerColor2 = EasyLD.timer.every(0.12, TopPath.switchColor, self, 2)
