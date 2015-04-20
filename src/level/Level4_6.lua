@@ -40,7 +40,7 @@ function Level:initialize(time, hMax, player, upDown)
 	local nbSlow = 0
 	for i = 2, 20 do
 		if i % 4 == 2 then
-			if sign < 0 and nbSlow > 1 then
+			if sign < 0 or nbSlow > 1 then
 				nbSlow = nbSlow - 1
 				table.insert(self.bonus, bSpeed:new(self.length + self.xStart, hMax/2 + hMax/3 * sign))
 			else
