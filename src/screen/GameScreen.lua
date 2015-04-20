@@ -54,8 +54,6 @@ function GameScreen:preCalcul(dt)
 end
 
 function GameScreen:update(dt)
-	
-
 	if not self.music then
 		engine.playlistOutside:play()
 		self.music = true

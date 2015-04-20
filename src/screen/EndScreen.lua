@@ -59,6 +59,12 @@ end
 function EndScreen:update(dt)
 	local mustRemove = {}
 
+	for i, v in ipairs(self.boss) do
+		if v.canFire then
+			v:fire()
+		end
+	end
+
 	for i,v in ipairs(self.projectiles) do
 		v:update(dt)
 		if v.dir.x < 0 and v:collide(self.player.sprite) then

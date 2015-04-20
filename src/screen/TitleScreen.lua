@@ -51,6 +51,10 @@ function TitleScreen:update(dt)
 		engine:setNextScreen(GameScreen:new())
 	end
 
+	if self.boss.canFire then
+		self.boss:fire()
+	end
+
 	local mustRemove = {}
 
 	for i,v in ipairs(self.projectiles) do
