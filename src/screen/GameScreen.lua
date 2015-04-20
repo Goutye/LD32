@@ -37,7 +37,6 @@ function GameScreen:preCalcul(dt)
 	if self.proj ~= nil then
 		if self.proj.dmg > self.boss.life and not self.boss.isDead and not self.proj.idDead then
 			self.prevBossLife = self.boss.life
-			print(self.proj.dmg, self.boss.life)
 			self.slower = true
 			dt = dt * math.min(2/10 + math.abs(self.boss.areaAnim.x - self.proj.sprite.x)/(WINDOW_WIDTH/4)*8/10, 1)
 		elseif self.boss.isDead then
@@ -153,7 +152,6 @@ function GameScreen:backToNormal()
 	for i = 1, #self.projectiles do
 		table.remove(self.projectiles, i)
 	end
-	print("ok")
 end
 
 return GameScreen

@@ -175,8 +175,6 @@ function TopPath:generateNewLevel()
 		if self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and self.bottomPath.steps[self.bottomPath.current + 2] ~= nil and #self.bottomPath.steps[self.bottomPath.current + 2] > 1 then
 			self.level = self.listLevel[self.intraLevel]:new(self.numLevel, self.h, self.player, true, self.intraLevel)
 		else
-			print(self.listLevel, self.intraLevel, self.numLevel)
-			print(self.listLevel[1], #self.listLevel)
 			self.level = self.listLevel[self.intraLevel]:new(self.numLevel, self.h, self.player, nil, self.intraLevel)
 		end
 	else
