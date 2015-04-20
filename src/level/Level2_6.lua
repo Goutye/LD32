@@ -13,7 +13,7 @@ local bSlow = require 'bonus.Slow'
 function Level:initialize(time, hMax, player, upDown)
 	self.xStart = WINDOW_WIDTH+10
 	self.length = 0
-	self.maxTime = 15 - (time-1)
+	self.maxTime = 10 - (time-1)
 	self.player = player
 	self.slow = 1
 	self.slowStart = 3
@@ -21,7 +21,7 @@ function Level:initialize(time, hMax, player, upDown)
 	self.bonus = {}
 	self.key = 0
 	self.maxKey = 2
-	self.maxOut = 1
+	self.maxOut = 3
 	self.num = 4
 	self.timer = {}
 	-----------------------------------
@@ -44,14 +44,15 @@ function Level:initialize(time, hMax, player, upDown)
 			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, hMax/2))
 			local a = EasyLD.area:new(seg)
 			a:follow(p)
+			self.moveArea1 = a
 			self.area:attach(a)
 			table.insert(self.bonus, bDeath:new(i * self.step + self.xStart, hMax/2))
 			table.insert(self.bonus, bKey:new(i * self.step + self.xStart, hMax-50))
 			table.insert(self.bonus, bSlow:new((4 + 2) * self.step + self.xStart, seg.p2.y))
 			table.insert(self.bonus, bSpeed:new(i * self.step + self.xStart, hMax/2+50))
 			i = i + 1
-			a:rotate(-math.pi/3*2.3)
-			self.timer[1] = EasyLD.timer.every(0.02, a.rotate, a, -math.pi/512)
+			a:rotateTo(math.pi/8*7)
+			self.timer[1] = EasyLD.timer.every(0.02, a.rotate, a, -math.pi/150)
 		elseif i == 7 then
 			table.insert(self.bonus, bDeath:new(i * self.step + self.xStart, hMax/2))
 			table.insert(self.bonus, bKey:new(i * self.step + self.xStart, 50))
@@ -63,9 +64,10 @@ function Level:initialize(time, hMax, player, upDown)
 			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, math.random(30, hMax-30)))
 			local a = EasyLD.area:new(seg)
 			a:follow(p)
+			self.moveArea2 = a
 			self.area:attach(a)
-			a:rotate(math.pi/3)
-			self.timer[2] = EasyLD.timer.every(0.02, a.rotate, a, math.pi/512)
+			a:rotate(math.pi/3*2)
+			self.timer[2] = EasyLD.timer.every(0.02, a.rotate, a, math.pi/250)
 		else
 			seg = EasyLD.segment:new(seg.p2:copy(), EasyLD.point:new(i * self.step + self.xStart, hMax/2))
 			self.area:attach(seg)
@@ -96,6 +98,11 @@ function Level:initialize(time, hMax, player, upDown)
 	self.bonusArea = self:createAreaBonus()
 
 	EasyLD.flux.to(self, 2, {slowStart = 1})
+end
+
+function Level:resetArea()
+	self.moveArea1:rotateTo(math.pi/6*5)
+	self.moveArea2:rotateTo(math.pi/3*2)
 end
 
 return Level

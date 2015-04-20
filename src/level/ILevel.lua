@@ -106,6 +106,10 @@ function ILevel:goBack()
 	end
 
 	self.player:reset()
+
+	if self.resetArea ~= nil then
+		self.timer4 = EasyLD.timer.after(coeff, self.resetArea, self)
+	end
 end
 
 function ILevel:start()

@@ -3,7 +3,7 @@ local class = require 'middleclass'
 local Player = class('Player')
 local Projectile = require 'Projectile'
 
-function Player:initialize()
+function Player:initialize(i)
 	self.h = 50
 	local c = EasyLD.circle:new(-100, 0, 10, EasyLD.color:new(0,150,0))
 	self.form = EasyLD.area:new(c)
@@ -13,7 +13,7 @@ function Player:initialize()
 	c.r = 30
 	self.area = EasyLD.area:new(c)
 
-	self.maxLife = 15
+	self.maxLife = 5 + (i or 1) * 10
 	self.life = self.maxLife
 	self.boxMaxLife = EasyLD.box:new(0, 0, 200, 30, EasyLD.color:new(255,255,255), "line")
 	self.boxLife = EasyLD.box:new(5, 5, 190, 20, EasyLD.color:new(0,0,0,120), "fill")
