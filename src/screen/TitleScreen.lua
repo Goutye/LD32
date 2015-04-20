@@ -24,7 +24,11 @@ function TitleScreen:initialize()
 	self.boxMinititle:rotate(-math.pi/6, 0, 0)
 	self.boxMinititle:moveTo(00, WINDOW_HEIGHT-100)
 
-	self.boxSign = EasyLD.box:new(WINDOW_WIDTH-300, WINDOW_HEIGHT-300, 295,310)
+	dec = 15
+	if love ~= nil then
+		dec = -15
+	end
+	self.boxSign = EasyLD.box:new(WINDOW_WIDTH-300, WINDOW_HEIGHT-300, 295,295 + dec)
 
 	self.player = Player:new()
 	self.player.areaAnim:moveTo(50, 100)

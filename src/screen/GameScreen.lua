@@ -128,7 +128,9 @@ end
 
 function GameScreen:draw()
 	self.topPath:draw()
+	EasyLD.graphics:setColor(EasyLD.color:new(255,255,255))
 	self.player:draw()
+	EasyLD.graphics:setColor(EasyLD.color:new(255,255,255))
 	
 	if self.fight then
 		self.bottomFight:draw()

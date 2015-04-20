@@ -185,8 +185,9 @@ end
 
 function TopPath:draw()
 	self.background:draw()
+	EasyLD.graphics:setColor(EasyLD.color:new(255,255,255))
 	self:drawUI()
-
+	EasyLD.graphics:setColor(EasyLD.color:new(255,255,255))
 	self.level:draw()
 end
 

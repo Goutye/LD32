@@ -7,22 +7,22 @@ function Engine:initialize(screen)
 	self.screen = screen
 
 	local s = {}
-	s.bossCast = EasyLD.music:new("assets/sfx/bossCast", true)
-	s.bossDead = EasyLD.music:new("assets/sfx/bossDead", true)
-	s.explode = EasyLD.music:new("assets/sfx/explode", true)
-	s.fail = EasyLD.music:new("assets/sfx/fail", true)
-	s.missileOut = EasyLD.music:new("assets/sfx/missileOut", true)
-	s.ok = EasyLD.music:new("assets/sfx/ok", true)
-	s.parry = EasyLD.music:new("assets/sfx/parry", true)
-	s.pickup = EasyLD.music:new("assets/sfx/pickup", true)
-	s.star = EasyLD.music:new("assets/sfx/star", true)
+	s.bossCast = EasyLD.music:new("assets/sfx/bossCast.wav", true)
+	s.bossDead = EasyLD.music:new("assets/sfx/bossDead.wav", true)
+	s.explode = EasyLD.music:new("assets/sfx/explode.wav", true)
+	s.fail = EasyLD.music:new("assets/sfx/fail.wav", true)
+	s.missileOut = EasyLD.music:new("assets/sfx/missileOut.wav", true)
+	s.ok = EasyLD.music:new("assets/sfx/ok.wav", true)
+	s.parry = EasyLD.music:new("assets/sfx/parry.wav", true)
+	s.pickup = EasyLD.music:new("assets/sfx/pickup.wav", true)
+	s.star = EasyLD.music:new("assets/sfx/star.wav", true)
 	s.speed = EasyLD.music:new("assets/sfx/speed.wav", true)
 	s.slow = EasyLD.music:new("assets/sfx/slow.wav", true)
 	s.attack = EasyLD.music:new("assets/sfx/attack.wav", true)
 	s.defense = EasyLD.music:new("assets/sfx/defense.wav", true)
 	s.youaredead = EasyLD.music:new("assets/sfx/youaredead.wav", true)
 	s.KO = EasyLD.music:new("assets/sfx/KO.wav", true)
-	s.bossHit = EasyLD.music:new("assets/sfx/bossHit", true)
+	s.bossHit = EasyLD.music:new("assets/sfx/bossHit.wav", true)
 
 	self.sfx = s
 
@@ -34,7 +34,7 @@ function Engine:initialize(screen)
 	table.insert(m, EasyLD.music:new("assets/music/4.ogg"))
 	table.insert(m, EasyLD.music:new("assets/music/5.ogg"))
 	for i,v in ipairs(m) do
-		v.looping = true
+		v:setLooping(true)
 		v:setVolume(0.5)
 	end
 
@@ -61,7 +61,7 @@ function Engine:initialize(screen)
 	table.insert(m, EasyLD.music:new("assets/music/5_out.ogg"))
 	table.insert(m, EasyLD.music:new("assets/music/6_out.ogg"))
 	for i,v in ipairs(m) do
-		v.looping = true
+		v:setLooping(true)
 		v:setVolume(0.5)
 	end
 	for i = 1, #m do

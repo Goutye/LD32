@@ -72,6 +72,7 @@ end
 
 function ILevel:draw()
 	self.area:draw()
+	EasyLD.graphics:setColor(EasyLD.color:new(255,255,255))
 	if self.bonusArea ~= nil then
 		for i,v in ipairs(self.bonus) do
 			v:draw()
