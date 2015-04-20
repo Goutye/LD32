@@ -114,6 +114,15 @@ function TopPath:update(dt)
 	if not self.level.isEnd and self.timerColor2 == nil and self.timerColor3 == nil then
 		self:updateColor()
 	end
+
+	if self.level.area.x > 0 and self.fight then
+		self.bottomPath.boss.fireOk = true
+		if self.bottomPath.boss.canFire then
+			self.bottomPath.boss:fire()
+		end
+	elseif self.fight then
+		self.bottomPath.boss.fireOk = false
+	end
 end
 
 function TopPath:displayText(id)

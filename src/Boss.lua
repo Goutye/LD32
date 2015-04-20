@@ -17,7 +17,7 @@ function Boss:initialize(level)
 
 	self.timeBeforeCast = 12 - (level - 1) 
 
-	self.timer = EasyLD.timer.after(math.random(5, 7) + self.timeBeforeCast, self.fire, self)
+	self.timer = EasyLD.timer.after(5 + self.timeBeforeCast, self.setCanFire, self)
 	self.timerCast = EasyLD.timer.after(self.timeBeforeCast, self.cast, self)
 
 	-----
@@ -53,6 +53,12 @@ function Boss:initialize(level)
 	self.currentAnim8 = self.anim8.normal
 	self.currentAnim8:play()
 
+	self.canFire = false
+	self.fireOk = false
+end
+
+function Boss:setCanFire()
+	self.canFire = true
 end
 
 function Boss:update(dt)
@@ -79,8 +85,10 @@ end
 function Boss:fire()
 	engine.sfx.missileOut:play()
 	self:changeAnim8("fire")
+	self.fireOk = false
+	self.canFire = false
 	table.insert(engine.screen.projectiles, Projectile:new(self.sprite.x - 10, self.sprite.y+ self.h/2, -1, 10))
-	self.timer = EasyLD.timer.after(self.timeBeforeCast + math.random(5, 7), self.fire, self)
+	self.timer = EasyLD.timer.after(self.timeBeforeCast + 5, self.setCanFire, self)
 	self.timerCast = EasyLD.timer.after(self.timeBeforeCast, self.cast, self)
 	self.sprite.forms[1].c = EasyLD.color:new(200,0,0)
 end

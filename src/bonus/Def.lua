@@ -16,6 +16,7 @@ end
 function Def:get(level)
 	if not self.isGet then
 		level.text = "DEFENSE"
+		level.defence = true
 		engine.sfx.defense:play()
 		level:def()
 		for i = 1, #level.bonus do
