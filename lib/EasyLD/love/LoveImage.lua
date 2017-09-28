@@ -54,10 +54,8 @@ function LoveImage:drawPart(mapX, mapY, x, y, w, h, id, angle)
 			self.quad[id] = love.graphics.newQuad(x, y, w, h, self.w, self.h)
 		end
 
-		self.batch:bind()
 		self.batch:clear()
 		self.batch:add(self.quad[id], mapX, mapY)
-		self.batch:unbind()
 
 		love.graphics.translate(mapX, mapY)
 		love.graphics.rotate(angle)
@@ -69,10 +67,8 @@ function LoveImage:drawPart(mapX, mapY, x, y, w, h, id, angle)
 	else
 		local quad = love.graphics.newQuad(x, y, w, h, self.w, self.h)
 		local batch = love.graphics.newSpriteBatch(self.src, 1)
-		batch:bind()
 		batch:clear()
 		batch:add(quad, mapX, mapY)
-		batch:unbind()
 
 		love.graphics.draw(batch, 0, 0)
 	end

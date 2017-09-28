@@ -23,6 +23,9 @@ function EasyLD:preCalcul(dt)
 end
 
 function EasyLD:update(dt)
+	if EasyLD.keyboard:isPressed("x") then
+		debug.debug()
+	end
 	engine:update(dt)
 end
 

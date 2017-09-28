@@ -51,7 +51,7 @@ function TitleScreen:playerHit()
 end
 
 function TitleScreen:update(dt)
-	if EasyLD.mouse:isPressed("l") or EasyLD.keyboard:isPressed("1") or EasyLD.keyboard:isPressed("&") then
+	if EasyLD.mouse:isPressed(1) or EasyLD.keyboard:isPressed("1") or EasyLD.keyboard:isPressed("&") then
 		engine:setNextScreen(GameScreen:new(1))
 	elseif EasyLD.keyboard:isPressed("2") or EasyLD.keyboard:isPressed("é") then
 		engine:setNextScreen(GameScreen:new(2))
